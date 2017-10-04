@@ -35,7 +35,7 @@ $(document).ready(function(){
 
     //Moon Festival special element
     window.open("../MoonFestival/MoonFestival.html");
-    window.location.href = '../MoonFestival/MoonFestival.html';
+    //window.location.href = '../MoonFestival/MoonFestival.html';
 });
 
 function changeHtml(content,id){
