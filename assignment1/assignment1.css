@@ -48,7 +48,7 @@ html,body
     background-size: cover;
     background-attachment: fixed;
     background-repeat: no-repeat;
-    background-position: 0px -320px;
+    background-position: 0px -400px;
     margin: 0px 0px 0px 0px;
     padding: 0px 0px 0px 0px;
     height: 575px;
@@ -58,13 +58,13 @@ html,body
     font-size: 35px;
     letter-spacing: 15px;
     display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .section1 > .row {
     padding: 0;
     margin: 0;
-    padding-top: 110px;
-    padding-left: 25%;
 }
 
 .section1 p {
@@ -79,6 +79,7 @@ html,body
     padding-top: 50px;
     margin: 0;
     display: flex;
+    justify-content: center;
 }
 
 .small-card {
@@ -93,39 +94,39 @@ html,body
     border-color: transparent;
     padding-right: 0;
     margin-left: 5%;
-    flex: 0.3;
+    flex: 0.2;
 }
 
 .small-card > .card-title {
-    position: relative;
-    top: 80px;
-    left: 0px;
-    font-size: 25px;
+    border-style: solid;
+    border-color: transparent;
+    margin-top: 35%;
+    margin-left: 10%;
+    font-size: 150%;
     letter-spacing: 8px;
 }
 
 .small-card > .card-content {
-    position: relative;
-    top: 150px;
-    margin: 20px;
-    font-size: 15px;
+    border-style: solid;
+    border-color: transparent;
+    margin-top: 45%;
+    margin-left: 15%;
+    width: 80%;
+    font-size: 95%;
     letter-spacing: 2px;
-    padding-top: 10px;
+    line-height: 150%;
 }
 
 .small-card > .card-button {
-    padding-top: 7px;
-    padding-bottom: 5px;
-    position: relative;
     border-style: solid;
     border-color: white;
     border-width: 1px;
-    width: 200px;
-    top: 160px;
-    left: 5%;
-    right: 5%;
-    font-size: 12px;
+    width: 70%;
+    font-size: 70%;
     font-weight: bold;
+    margin-top: 15%;
+    margin-left: 19%;
+    padding: 4% 0 4% 0;
 }
 
 .picture-frame {
@@ -136,7 +137,7 @@ html,body
     border-color: transparent;
     padding-left: 10%;
     margin-right: 4%;
-    flex: 0.70;
+    flex: 0.45;
 }
 
 .section3 {
@@ -208,7 +209,7 @@ html,body
     background-size: cover;
     background-attachment: fixed;
     background-repeat: no-repeat;
-    background-position: 20px -25%;
+    background-position: 20px 20%;
     margin: 5% 0 0 0;
     flex: 0.9;
     height: 70%;
@@ -231,7 +232,7 @@ html,body
 }
 
 .section5 .row {
-    background-color: #3b8242;
+    background-color: #a69257;
     flex: 0.9;
     height: 100%;
     display: flex;
@@ -251,29 +252,29 @@ html,body
 }
 
 .section5 .row .col p {
-    font-size: 10px;
+    font-size: 12px;
     color: white;
     margin-top: 0em;
     margin-bottom: 0em;
     line-height: 120%;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.05em;
 }
 
 .section5 .row #box2{
     border-style: solid;
     border-color: white;
     border-width: 1px;
-    height: 30%;
-    flex: 0.22;
+    height: 22%;
+    flex: 0.14;
     display: flex;
-    margin-left: 0%;
+    margin-left: 0;
     margin-top: 5%;
     padding: 0;
     color: white;
-    display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
     font-size: 10px;
     letter-spacing: 1px;
+    font-weight: bold;
 }
