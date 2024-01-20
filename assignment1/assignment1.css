@@ -106,8 +106,8 @@ html,body
 .small-card > .card-title {
     border-style: solid;
     border-color: transparent;
+    margin: auto;
     margin-top: 35%;
-    margin-left: 10%;
     font-size: 150%;
     letter-spacing: 8px;
 }
