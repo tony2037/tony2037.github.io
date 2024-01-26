@@ -1,0 +1,35 @@
+<!doctype html>
+
+<html>
+<head>
+  <title>Tony's Assignment2 - Stock Search</title>
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+  <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+  <h1>Stock Search</h1>
+
+  <form action="{{ url_for('search') }}" method="get">
+    <input type="text" placeholder="Enter Stock Ticker Symbol" name="stock_symbol" required>
+  </form>
+
+  {% if search_result %}
+  <table>
+    {% for key, value in search_result.items() %}
+    <tr>
+        <td>{{ key }}</td>
+        <td>{{ value }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% endif %}
+
+
+  <h2>Last 10 visits</h2>
+  {% for time in times %}
+    <p>{{ time }}</p>
+  {% endfor %}
+
+</body>
+</html>
