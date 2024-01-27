@@ -1,4 +1,61 @@
- body {
-    font-family: "helvetica", sans-serif;
-    text-align: center;
-  }
+* {
+  min-width: 0;
+  font: inherit;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+img, video, svg {
+  display: block;
+  height: auto;
+  max-width: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+body {
+  font-family: sans-serif,"helvetica";
+  text-align: center;
+  background-image: url("images/back.svg");
+  background-size: auto 45%;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-position: center top;
+  padding-top: 25px;
+}
+
+h1.title {
+  font-size: 35px;
+  letter-spacing: 2px;
+  color: #27211A;
+}
+
+form.search_form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+input.search_form {
+  flex: .3;
+  padding: 8px;
+  border-radius: 10px;
+}
+
+button.search_form {
+  padding: 20px 20px;
+  border-radius: 2px;
+}
