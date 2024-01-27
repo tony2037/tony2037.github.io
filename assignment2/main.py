@@ -1,7 +1,7 @@
-import datetime
-
 from flask import Flask, render_template, send_file
 from flask import request
+
+from api import *
 
 app = Flask(__name__)
 
@@ -13,16 +13,9 @@ def root():
 @app.route('/search/', methods=["GET"])
 def search():
     stock_symbol = request.args.get('stock_symbol')
+    res = finnhub_wrapper(stock_symbol)
 
-    data = {
-        "logo": "https://finnhub.io/api/logo?symbol=AAPL",
-        "name": "Apple Inc",
-        "ticker": "AAPL",
-        "exchange": "NASDAQ",
-        "ipo": "1111-11-11",
-        "finnhubIndustry": "High tech"
-    }
-    return data
+    return res
 
 
 if __name__ == "__main__":
