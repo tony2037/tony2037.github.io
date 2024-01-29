@@ -6,6 +6,30 @@ window.addEventListener('load', function () {
 
 });
 
+const searchState = {
+  'Init': 0,
+  'Success': 1,
+  'Error': 2
+};
+function changeSearchState(state) {
+  var errorBlock = document.querySelector('.result-error#result-bg');
+  var successBlock = document.querySelector('.result-success');
+  switch(state) {
+    case searchState.Success:
+      errorBlock.style.display = "none";
+      successBlock.style.display = "block";
+      break;
+    case searchState.Error:
+      errorBlock.style.display = "block";
+      successBlock.style.display = "none";
+      break;
+    case searchState.Init:
+    default:
+      errorBlock.style.display = "none";
+      successBlock.style.display = "none";
+  }
+}
+
 function performSearch() {
   var stockSymbol = document.getElementById('search-input').value;
   console.log("performSearch: " + stockSymbol);
@@ -18,8 +42,21 @@ function performSearch() {
   .then(response => response.json())
   .then(data => {
     console.log(data);
+    if (Object.keys(data).length == 0) {
+      // Cannot find record for this symbol
+      changeSearchState(searchState.Error);
+    }
+    else {
+      // Found the record
+      changeSearchState(searchState.Success);
+    }
   })
   .catch(error => console.error("Error:", error));
+}
+
+function clearSearch() {
+  document.getElementById('search-input').value = "";
+  changeSearchState(searchState.Init);
 }
 
 /* Switch the tabs in the result box */

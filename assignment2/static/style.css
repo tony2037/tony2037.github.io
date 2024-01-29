@@ -107,7 +107,7 @@ form.search-form {
 .result-success {
   margin: auto;
   flex: .5;
-  display: auto; /* Modify this attribute to toggle the view */
+  display: none; /* Modify this attribute to toggle the view */
   border-style: solid;
   border-color: red;
 }
