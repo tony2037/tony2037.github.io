@@ -30,6 +30,14 @@ function changeSearchState(state) {
   }
 }
 
+
+//TODO: fill the data to corresponding element
+function fillData(data) {
+  var logo = document.getElementById('company-logo');
+
+  logo.src = data['logo']
+}
+
 function performSearch() {
   var stockSymbol = document.getElementById('search-input').value;
   console.log("performSearch: " + stockSymbol);
@@ -41,6 +49,7 @@ function performSearch() {
   })
   .then(response => response.json())
   .then(data => {
+    // FIXME: remove the log
     console.log(data);
     if (Object.keys(data).length == 0) {
       // Cannot find record for this symbol
@@ -49,6 +58,7 @@ function performSearch() {
     else {
       // Found the record
       changeSearchState(searchState.Success);
+      fillData(data);
     }
   })
   .catch(error => console.error("Error:", error));

@@ -133,3 +133,9 @@ button.result-tab {
   outline: none;
   height: 100%;
 }
+
+img.result-company#company-logo {
+  margin: auto;
+  width: 100px;
+  height: 100px;
+}
