@@ -86,3 +86,49 @@ form.search-form {
   width: 100%;
 }
 
+.result-box {
+  margin-top: 250px;
+  display: flex;
+}
+
+.result-error#result-bg {
+  margin: auto;
+  background-color: #e8e8e8;
+  width: 55ch;
+  height: 5ch;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: .5;
+  display: none; /* Modify this attribute to toggle the view */
+}
+
+.result-success {
+  margin: auto;
+  flex: .5;
+  display: auto; /* Modify this attribute to toggle the view */
+  border-style: solid;
+  border-color: red;
+}
+
+.result-tabs-bg{
+  margin: auto;
+  background-color: #eaeaea;
+  height: 5ch;
+  text-align: left;
+  font-size: medium;
+  display: flex;
+  align-items: center;
+}
+
+button.result-tab {
+  margin-right: auto;
+  margin: 10px;
+  background-color: transparent;
+  background-repeat: no-repeat;
+  border: none;
+  cursor: pointer;
+  overflow: hidden;
+  outline: none;
+}

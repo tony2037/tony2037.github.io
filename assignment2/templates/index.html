@@ -18,6 +18,33 @@
     <div class="cancel-icon" onclick="clearSearch()"></div>
   </div>
 
+  <div class="result-box">
+    <div class="result-error" id="result-bg">
+      <p class="result-error">Error: No record has been found, please enter a valid symbol</p>
+    </div>
+
+    <div class="result-success">
+      <div class="result-tabs result-tabs-bg">
+        <button class="result-tabs result-tab" id="tab-company" onclick="openTab('company', 'tab-company')" style="background-color:#cbcbcb">Company</button>
+        <button class="result-tabs result-tab" id="tab-stock-summary" onclick="openTab('stock-summary', 'tab-stock-summary')">Stock Summary</button>
+        <button class="result-tabs result-tab" id="tab-charts" onclick="openTab('charts', 'tab-charts')">Charts</button>
+        <button class="result-tabs result-tab" id="tab-latest-news" onclick="openTab('latest-news', 'tab-latest-news')">Latest News</button>
+      </div>
+      <div id="company" class="result-info">
+        <p>Test - Company</p>
+      </div>
+      <div id="stock-summary" class="result-info" style="display:none">
+        <p>Test - Stock Summary</p>
+      </div>
+      <div id="charts" class="result-info" style="display:none">
+        <p>Test - Charts</p>
+      </div>
+      <div id="latest-news" class="result-info" style="display:none">
+        <p>Test - Latest News</p>
+      </div>
+    </div>
+  </div>
+
 
 </body>
 </html>
