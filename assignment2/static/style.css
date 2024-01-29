@@ -131,4 +131,5 @@ button.result-tab {
   cursor: pointer;
   overflow: hidden;
   outline: none;
+  height: 100%;
 }
