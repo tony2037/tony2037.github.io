@@ -34,8 +34,18 @@ function changeSearchState(state) {
 //TODO: fill the data to corresponding element
 function fillData(data) {
   var logo = document.getElementById('company-logo');
+  var companyName = document.getElementById('company-company-name');
+  var stockSymbol = document.getElementById('company-stock-symbol');
+  var stockCode = document.getElementById('company-stock-code');
+  var ipo = document.getElementById('company-ipo');
+  var category = document.getElementById('company-category');
 
-  logo.src = data['logo']
+  logo.src = data['logo'];
+  companyName.innerHTML = data['name'];
+  stockSymbol.innerHTML = data['ticker'];
+  stockCode.innerHTML = data['exchange'];
+  ipo.innerHTML = data['ipo'];
+  category.innerHTML = data['finnhubIndustry'];
 }
 
 function performSearch() {

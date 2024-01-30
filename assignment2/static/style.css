@@ -136,6 +136,45 @@ button.result-tab {
 
 img.result-company#company-logo {
   margin: auto;
+  margin-bottom: 15px;
   width: 100px;
   height: 100px;
+}
+
+.result-info {
+  justify-self: center
+}
+
+.company-form {
+  border-style: solid;
+  border-color: yellow;
+  font-size: medium;
+  margin: auto;
+  width: 50ch;
+}
+
+.company-table {
+  margin: auto;
+}
+
+table.company-table {
+  border-collapse: collapse;
+}
+
+table, th, td {
+  border-spacing: 10px;
+  padding: 3px;
+}
+
+td {
+  margin-right: 10px;
+  text-align: left;
+}
+
+.company-table-title {
+  font-weight: bold;
+}
+
+.company-table-content {
+  margin-left: 10ch;
 }
