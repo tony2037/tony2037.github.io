@@ -14,7 +14,8 @@ def root():
 def search():
     stock_symbol = request.args.get('stock_symbol')
     res = finnhub_wrapper(stock_symbol)
-
+    polygon_res = polygon_wrapper(stock_symbol)
+    res['polygon_res'] = polygon_res
     return res
 
 

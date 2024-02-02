@@ -72,6 +72,12 @@ function fillData(data) {
   var stockLowPrice = document.getElementById('stock-low-price');
   var stockChange = document.getElementById('stock-change');
   var stockChangePercent = document.getElementById('stock-change-percent');
+  /* recommendation trends */
+  var squareStrongSell = document.getElementById('square-strongSell');
+  var squareSell = document.getElementById('square-sell');
+  var squareHold = document.getElementById('square-hold');
+  var squareBuy = document.getElementById('square-buy');
+  var squareStrongBuy = document.getElementById('square-strongBuy');
 
   /* company tabs */
   companyLogo.src = data['logo'];
@@ -90,7 +96,15 @@ function fillData(data) {
   changeArrows(data['d']);
   stockChange.innerHTML = data['d'];
   stockChangePercent.innerHTML = data['dp'];
-  // TODO: Recommendation Trends
+  /* recommendation trends */
+  var recommendationTrends = ('recommendation_trends' in data) ? data['recommendation_trends'] : null;
+  if (recommendationTrends) {
+    squareStrongSell.innerHTML = recommendationTrends['strongSell'];
+    squareSell.innerHTML = recommendationTrends['sell'];
+    squareHold.innerHTML = recommendationTrends['hold'];
+    squareBuy.innerHTML = recommendationTrends['buy'];
+    squareStrongBuy.innerHTML = recommendationTrends['strongBuy'];
+  }
 
 }
 

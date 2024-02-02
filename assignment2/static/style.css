@@ -109,8 +109,6 @@ form.search-form {
   margin: auto;
   flex: .5;
   display: block; /* Modify this attribute to toggle the view */
-  border-style: solid;
-  border-color: red;
 }
 
 .result-tabs-bg{
@@ -147,8 +145,6 @@ img.result-company#company-logo {
 }
 
 .company-form {
-  border-style: solid;
-  border-color: yellow;
   font-size: medium;
   margin: auto;
   width: 50ch;
@@ -187,4 +183,64 @@ img.result-company#company-logo {
 img.change-arrow {
   width: 10px;
   display: inline-block;
+}
+
+.recommendation-trends-box {
+  position: relative;
+}
+
+.recommendation-squares {
+  display: inline-block;
+  font-size: 0;
+  vertical-align: top;
+  height: 45px;
+  top: 0;
+}
+
+.square {
+  font-size: large;
+  margin: auto;
+  display: inline-block;
+  text-align: center;
+  margin-top: 10px;
+  height: 3ch;
+  line-height: 3ch;
+  width: 3ch;
+  color: white;
+}
+
+.strong-sell-text,
+.strong-buy-text
+{
+  font-size: large;
+  width: 6ch;
+  display:inline-block;
+}
+
+.strong-sell-text {
+  color: #D2584C;
+}
+
+.strong-buy-text {
+  color: #8FCD97;
+}
+
+#square-strongSell {
+  background-color: #CB2E3A;
+}
+
+#square-sell {
+  background-color: #9C5D4B;
+}
+
+#square-hold {
+  background-color: #7D915D;
+}
+
+#square-buy {
+  background-color: #81C26F;
+}
+
+#square-strongBuy {
+ background-color: #8FFE86;
 }
