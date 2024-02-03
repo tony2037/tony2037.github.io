@@ -78,6 +78,8 @@ function fillData(data) {
   var squareHold = document.getElementById('square-hold');
   var squareBuy = document.getElementById('square-buy');
   var squareStrongBuy = document.getElementById('square-strongBuy');
+  /* news tabs */
+  // TODO: render data['company_news']
 
   /* company tabs */
   companyLogo.src = data['logo'];

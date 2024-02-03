@@ -249,3 +249,38 @@ img.change-arrow {
   height: 400px;
   min-width: 310px;
 }
+
+.news-row {
+  background-color: #F8F9FA;
+  display: flex;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.news-row img {
+  height: 100px;
+  width: 100px;
+  margin-left: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  order: -1;
+}
+
+.news-texts {
+  flex: 0.9;
+  margin: auto;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.news-texts p {
+  font-family: sans-serif,"helvetica";
+  margin: 0;
+  padding: 0;
+}
+
+b.news-title {
+  font-size: x-large;
+}
