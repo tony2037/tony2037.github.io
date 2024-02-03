@@ -33,12 +33,38 @@ def company_recommendation_trends(symbol: str):
     res = api_get_wrapper(api, json.loads)
     return res
 
+def company_news(symbol: str):
+    TODAY = date.today()
+    FROM = TODAY - relativedelta(days=30)
+    FROM = FROM.strftime('%Y-%m-%d')
+    TODAY = TODAY.strftime('%Y-%m-%d')
+    valid_key = lambda x, k : ((k in x) and (len(x[k]) > 0))
+    keys = ('image', 'headline', 'url')
+    def valid(data):
+        ans = True
+        for key in keys:
+            ans = ans and valid_key(data, key)
+        return ans
+    api = f'https://finnhub.io/api/v1/company-news?symbol={symbol}&from={FROM}&to={TODAY}&token={FINNHUB_API_KEY}'
+    res = api_get_wrapper(api, json.loads)
+
+    top5 = []
+    for news in res:
+        if not valid(news):
+            continue
+        top5.append(news)
+        if len(top5) >= 5:
+            break
+
+    return top5
+
 def finnhub_wrapper(symbol: str):
     res = {}
     
     target_keys = ('logo', 'name', 'ticker', 'exchange', 'ipo', 'finnhubIndustry')
     profile = company_profile_2(symbol)
     if not profile:
+        print('company_profile_2 fail')
         return {}
     for key in target_keys:
         res[key] = profile[key]
@@ -46,14 +72,22 @@ def finnhub_wrapper(symbol: str):
     target_keys = ('t', 'pc', 'o', 'h', 'l', 'd', 'dp')
     quote = company_quote(symbol)
     if not quote:
+        print('company_quote fail')
         return {}
     for key in target_keys:
         res[key] = quote[key]
 
     trends = company_recommendation_trends(symbol)
     if not trends or len(trends) == 0:
+        print('company_recommendation_trends fail')
         return {}
     res['recommendation_trends'] = trends[-1]
+
+    news = company_news(symbol)
+    if not news or len(news) == 0:
+        print('company_news fail')
+        return {}
+    res['company_news'] = news
 
     return res
 
