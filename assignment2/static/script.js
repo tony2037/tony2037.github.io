@@ -111,8 +111,8 @@ function fillData(data) {
 function fillChart(symbol, data) {
   const getToday = () => {
     const currentDate = new Date();
-    const day = currentDate.getDate();
-    const month = currentDate.getMonth() + 1;
+    const day = ("0" + currentDate.getDate()).slice(-2); // get two digit
+    const month = ("0" + (currentDate.getMonth() + 1)).slice(-2);
     const year = currentDate.getFullYear();
     var res = `${year}-${month}-${day}`
     return res
@@ -173,7 +173,7 @@ function fillChart(symbol, data) {
     },
     title: {
         text: 'Stock Price',
-        offset: 50
+        offset: 30
     },
     opposite: false  // Display this y-axis on the left side
 }, {
@@ -182,7 +182,7 @@ function fillChart(symbol, data) {
     },
     title: {
         text: 'Volume',
-        offset: 50
+        offset: 30
     },
     opposite: true  // Display this y-axis on the right side
 }],
