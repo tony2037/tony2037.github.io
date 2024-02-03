@@ -244,3 +244,8 @@ img.change-arrow {
 #square-strongBuy {
  background-color: #8FFE86;
 }
+
+#chart-container {
+  height: 400px;
+  min-width: 310px;
+}

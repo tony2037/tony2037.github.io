@@ -108,6 +108,119 @@ function fillData(data) {
 
 }
 
+function fillChart(symbol, data) {
+  const getToday = () => {
+    const currentDate = new Date();
+    const day = currentDate.getDate();
+    const month = currentDate.getMonth() + 1;
+    const year = currentDate.getFullYear();
+    var res = `${year}-${month}-${day}`
+    return res
+  }
+  var title = `Stock Price ${symbol} ${getToday()}`
+  var prices = []
+  var volumes = []
+  var days = data['resultsCount']
+  var results = data['results']
+  for (var i = 0; i < days; i++) {
+    var result = results[i]
+    var t = result['t']
+    var c = result['c']
+    var v = result['v']
+    prices.push([t,c]);
+    volumes.push([t,v]);
+  }
+
+  // Create the chart
+  Highcharts.stockChart('chart-container', {
+    rangeSelector: {
+        selected: 1
+    },
+
+    title: {
+        text: title
+    },
+
+    rangeSelector: {
+      buttons: [{
+          type: 'day',
+          count: 7,
+          text: '7d'
+      }, {
+          type: 'day',
+          count: 15,
+          text: '15d'
+      }, {
+        type: 'month',
+        count: 1,
+        text: '1m'
+      }, {
+        type: 'month',
+        count: 3,
+        text: '3m'
+      }, {
+          type: 'month',
+          count: 6,
+          text: '6m'
+      }],
+      selected: 1,
+      inputEnabled: false
+  },
+
+  yAxis: [{
+    labels: {
+        align: 'left'
+    },
+    title: {
+        text: 'Stock Price',
+        offset: 50
+    },
+    opposite: false  // Display this y-axis on the left side
+}, {
+    labels: {
+        align: 'right'
+    },
+    title: {
+        text: 'Volume',
+        offset: 50
+    },
+    opposite: true  // Display this y-axis on the right side
+}],
+
+  series: [{
+      name: `${symbol} Price`,
+      type: 'area',
+      data: prices,
+      tooltip: {
+          valueDecimals: 2,
+      },
+      fillColor: {
+          linearGradient: {
+              x1: 0,
+              y1: 0,
+              x2: 0,
+              y2: 1
+          },
+          stops: [
+              [0, Highcharts.getOptions().colors[0]],
+              [1, Highcharts.color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+          ]
+      },
+      threshold: null,
+      zIndex: 2
+  }, {
+      name: `${symbol} Volume`,
+      type: 'column',
+      color: 'black',
+      zIndex: 1,
+      yAxis: 1,
+      data: volumes
+  }
+  ],
+
+});
+}
+
 function performSearch() {
   var stockSymbol = document.getElementById('search-input').value;
   console.log("performSearch: " + stockSymbol);
@@ -129,6 +242,7 @@ function performSearch() {
       // Found the record
       changeSearchState(searchState.Success);
       fillData(data);
+      'polygon_res' in data ? fillChart(data['ticker'], data['polygon_res']) : null
     }
   })
   .catch(error => console.error("Error:", error));
