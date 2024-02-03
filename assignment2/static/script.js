@@ -141,6 +141,11 @@ function fillChart(symbol, data) {
         text: title
     },
 
+    subtitle: {
+        text: '<a href="https://polygon.io/">Source: Polygon.io</a>',
+        useHTML: true,
+    },
+
     rangeSelector: {
       buttons: [{
           type: 'day',
