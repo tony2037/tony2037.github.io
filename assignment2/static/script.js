@@ -78,8 +78,6 @@ function fillData(data) {
   var squareHold = document.getElementById('square-hold');
   var squareBuy = document.getElementById('square-buy');
   var squareStrongBuy = document.getElementById('square-strongBuy');
-  /* news tabs */
-  // TODO: render data['company_news']
 
   /* company tabs */
   companyLogo.src = data['logo'];
@@ -106,6 +104,30 @@ function fillData(data) {
     squareHold.innerHTML = recommendationTrends['hold'];
     squareBuy.innerHTML = recommendationTrends['buy'];
     squareStrongBuy.innerHTML = recommendationTrends['strongBuy'];
+  }
+  /* news tabs */
+  var top5 = data['company_news']
+  for (var i = 0; i < top5.length; i++) {
+    var news = top5[i]
+    /* data */
+    var image = news['image']
+    var title = news['headline']
+    var epoch = news['datetime']
+    var datetime = unixEpochTimeConvert(epoch)
+    var url = news['url']
+    /* ids */
+    var imgId = `news-img-${i}`
+    var imgElement = document.getElementById(imgId)
+    imgElement.src = image
+    var titleId = `news-title-${i}`
+    var titleElement = document.getElementById(titleId)
+    titleElement.innerHTML = title
+    var dateId = `news-date-${i}`
+    var dateElement = document.getElementById(dateId)
+    dateElement.innerHTML = datetime
+    var urlId = `news-url-${i}`
+    var urlElement = document.getElementById(urlId)
+    urlElement.href = url
   }
 
 }
@@ -170,7 +192,7 @@ function fillChart(symbol, data) {
           count: 6,
           text: '6m'
       }],
-      selected: 1,
+      selected: 3,
       inputEnabled: false
   },
 
@@ -241,7 +263,7 @@ function performSearch() {
   .then(data => {
     // FIXME: remove the log
     console.log(data);
-    if (Object.keys(data).length == 0) {
+    if (Object.keys(data).length == 0 || data['success'] != true) {
       // Cannot find record for this symbol
       changeSearchState(searchState.Error);
     }

@@ -14,8 +14,14 @@ def root():
 def search():
     stock_symbol = request.args.get('stock_symbol')
     res = finnhub_wrapper(stock_symbol)
+    if not len(res) > 0:
+        return {}
     polygon_res = polygon_wrapper(stock_symbol)
+    if not len(polygon_res) > 0:
+        return {}
     res['polygon_res'] = polygon_res
+
+    res['success'] = True
     return res
 
 

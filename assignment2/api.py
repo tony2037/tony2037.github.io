@@ -98,11 +98,12 @@ def aggr_service(symbol: str):
     TO = TODAY
     FROM = FROM.strftime('%Y-%m-%d')
     TO = TO.strftime('%Y-%m-%d')
-    print(f'{FROM} to {TO}')
     api = f'https://api.polygon.io/v2/aggs/ticker/{symbol}/range/1/day/{FROM}/{TO}?adjusted=true&sort=asc&apiKey={POLYGON_API_KEY}'
     res = api_get_wrapper(api, json.loads)
     return res
 
 def polygon_wrapper(symbol: str):
     aggregate_data = aggr_service(symbol)
+    if not len(aggregate_data) > 0:
+        return {}
     return aggregate_data
