@@ -12,6 +12,7 @@ POLYGON_API_KEY = 'REDACTED_POLYGON_KEY'
 def api_get_wrapper(url: str, method=None):
     res = requests.get(url)
     if res.status_code != 200:
+        print(f'[{res.status_code}]: {url}')
         return None
     content = res.content
     if method:
