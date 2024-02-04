@@ -251,7 +251,9 @@ function fillChart(symbol, data) {
 }
 
 function performSearch() {
-  var stockSymbol = document.getElementById('search-input').value;
+  var searchInputElement = document.getElementById('search-input')
+  var stockSymbol = searchInputElement.value;
+
   console.log("performSearch: " + stockSymbol);
   fetch("/search?stock_symbol=" + stockSymbol, {
     method: "GET",

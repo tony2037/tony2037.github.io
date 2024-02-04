@@ -13,6 +13,7 @@ def root():
 @app.route('/search/', methods=["GET"])
 def search():
     stock_symbol = request.args.get('stock_symbol')
+    stock_symbol = stock_symbol.upper()
     res = finnhub_wrapper(stock_symbol)
     if not len(res) > 0:
         return {}

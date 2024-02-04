@@ -15,11 +15,11 @@
   <h1 class="title">Stock Search</h1>
 
   <div class="search-box">
-    <div class="search-icon" onclick="performSearch()"></div>
     <form class="search-form" id="search-form" action="">
+      <input class="search-icon" type="submit" value=""></input>
       <input type="text" class="search-input" id="search-input" placeholder="Enter Stock Ticker Symbol" required>
+      <input class="cancel-icon" type="button" value="" onclick="clearSearch()"></input>
     </form>
-    <div class="cancel-icon" onclick="clearSearch()"></div>
   </div>
 
   <div class="result-box">
