@@ -255,7 +255,8 @@ function performSearch() {
   var stockSymbol = searchInputElement.value;
 
   console.log("performSearch: " + stockSymbol);
-  fetch("/search?stock_symbol=" + stockSymbol, {
+  fetch("search?stock_symbol=" + stockSymbol, {
+    credentials: "include",
     method: "GET",
     headers: {
       "Content-Type": "application/json"
