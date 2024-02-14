@@ -11,6 +11,8 @@ const searchState = {
   'Success': 1,
   'Error': 2
 };
+var searchSuccess = false
+
 function changeSearchState(state) {
   var errorBlock = document.querySelector('.result-error#result-bg');
   var successBlock = document.querySelector('.result-success');
@@ -250,9 +252,25 @@ function fillChart(symbol, data) {
 });
 }
 
+function callAPI(route, stockSymbol, callback) {
+  var api = `${route}?stock_symbol=${stockSymbol}`
+  fetch(api, {
+    credentials: "include",
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json"
+    },
+  })
+  .then(response => response.json())
+  .then(data => {
+    callback(data)
+  })
+}
+
 function performSearch() {
   var searchInputElement = document.getElementById('search-input')
-  var stockSymbol = searchInputElement.value;
+  var stockSymbol = searchInputElement.value
+  searchSuccess = false
 
   console.log("performSearch: " + stockSymbol);
   fetch("search?stock_symbol=" + stockSymbol, {
