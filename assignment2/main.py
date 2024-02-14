@@ -25,6 +25,40 @@ def search():
     res['success'] = True
     return res
 
+@app.route('/company_profile_2/', methods=["GET"])
+def route_company_profile_2():
+    stock_symbol = request.args.get('stock_symbol')
+    stock_symbol = stock_symbol.upper()
+    res = company_profile_2(stock_symbol)
+    return res
+
+@app.route('/company_quote/', methods=["GET"])
+def route_company_quote():
+    stock_symbol = request.args.get('stock_symbol')
+    stock_symbol = stock_symbol.upper()
+    res = company_quote(stock_symbol)
+    return res
+
+@app.route('/company_recommendation_trends/', methods=["GET"])
+def route_company_recommendation_trends():
+    stock_symbol = request.args.get('stock_symbol')
+    stock_symbol = stock_symbol.upper()
+    res = company_recommendation_trends(stock_symbol)
+    return res
+
+@app.route('/company_news/', methods=["GET"])
+def route_company_news():
+    stock_symbol = request.args.get('stock_symbol')
+    stock_symbol = stock_symbol.upper()
+    res = company_news(stock_symbol)
+    return res
+
+@app.route('/polygon_wrapper/', methods=["GET"])
+def route_polygon_wrapper():
+    stock_symbol = request.args.get('stock_symbol')
+    stock_symbol = stock_symbol.upper()
+    res = polygon_wrapper(stock_symbol)
+    return res
 
 if __name__ == "__main__":
     # This is used when running locally only. When deploying to Google App
