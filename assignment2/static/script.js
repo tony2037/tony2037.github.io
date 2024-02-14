@@ -13,6 +13,11 @@ const searchState = {
 };
 var searchSuccess = false
 
+function updateSearchResult() {
+  if (searchSuccess) { changeSearchState('Success') }
+  else { changeSearchState('Error') }
+}
+
 function changeSearchState(state) {
   var errorBlock = document.querySelector('.result-error#result-bg');
   var successBlock = document.querySelector('.result-success');
@@ -56,15 +61,7 @@ function changeArrows(change) {
   }
 }
 
-//TODO: fill the data to corresponding element
 function fillData(data) {
-  /* company tabs */
-  var companyLogo = document.getElementById('company-logo');
-  var companyName = document.getElementById('company-company-name');
-  var companyStockSymbol = document.getElementById('company-stock-symbol');
-  var companyStockCode = document.getElementById('company-stock-code');
-  var companyIpo = document.getElementById('company-ipo');
-  var companyCategory = document.getElementById('company-category');
   /* stock tabs */
   var stockStockSymbol = document.getElementById('stock-stock-symbol');
   var stockTradingDay = document.getElementById('stock-trading-day');
@@ -81,13 +78,6 @@ function fillData(data) {
   var squareBuy = document.getElementById('square-buy');
   var squareStrongBuy = document.getElementById('square-strongBuy');
 
-  /* company tabs */
-  companyLogo.src = data['logo'];
-  companyName.innerHTML = data['name'];
-  companyStockSymbol.innerHTML = data['ticker'];
-  companyStockCode.innerHTML = data['exchange'];
-  companyIpo.innerHTML = data['ipo'];
-  companyCategory.innerHTML = data['finnhubIndustry'];
   /* stock tabs */
   stockStockSymbol.innerHTML = data['ticker'];
   stockTradingDay.innerHTML = unixEpochTimeConvert(data['t']);
@@ -267,12 +257,32 @@ function callAPI(route, stockSymbol, callback) {
   })
 }
 
+function fillCompanyTabs(data) {
+  if (Object.keys(data).length > 0) { searchSuccess = true }
+  var companyLogo = document.getElementById('company-logo');
+  var companyName = document.getElementById('company-company-name');
+  var companyStockSymbol = document.getElementById('company-stock-symbol');
+  var companyStockCode = document.getElementById('company-stock-code');
+  var companyIpo = document.getElementById('company-ipo');
+  var companyCategory = document.getElementById('company-category');
+
+  companyLogo.src = data['logo'];
+  companyName.innerHTML = data['name'];
+  companyStockSymbol.innerHTML = data['ticker'];
+  companyStockCode.innerHTML = data['exchange'];
+  companyIpo.innerHTML = data['ipo'];
+  companyCategory.innerHTML = data['finnhubIndustry'];
+}
+
 function performSearch() {
   var searchInputElement = document.getElementById('search-input')
   var stockSymbol = searchInputElement.value
   searchSuccess = false
 
   console.log("performSearch: " + stockSymbol);
+  callAPI('company_profile_2', stockSymbol, fillCompanyTabs)
+  updateSearchResult()
+
   fetch("search?stock_symbol=" + stockSymbol, {
     credentials: "include",
     method: "GET",
