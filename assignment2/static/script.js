@@ -62,15 +62,6 @@ function changeArrows(change) {
 }
 
 function fillData(data) {
-  /* stock tabs */
-  var stockStockSymbol = document.getElementById('stock-stock-symbol');
-  var stockTradingDay = document.getElementById('stock-trading-day');
-  var stockClosingPrice = document.getElementById('stock-closing-price');
-  var stockOpeningPrice = document.getElementById('stock-opening-price');
-  var stockHighPrice = document.getElementById('stock-high-price');
-  var stockLowPrice = document.getElementById('stock-low-price');
-  var stockChange = document.getElementById('stock-change');
-  var stockChangePercent = document.getElementById('stock-change-percent');
   /* recommendation trends */
   var squareStrongSell = document.getElementById('square-strongSell');
   var squareSell = document.getElementById('square-sell');
@@ -78,16 +69,6 @@ function fillData(data) {
   var squareBuy = document.getElementById('square-buy');
   var squareStrongBuy = document.getElementById('square-strongBuy');
 
-  /* stock tabs */
-  stockStockSymbol.innerHTML = data['ticker'];
-  stockTradingDay.innerHTML = unixEpochTimeConvert(data['t']);
-  stockClosingPrice.innerHTML = data['pc'];
-  stockOpeningPrice.innerHTML = data['o'];
-  stockHighPrice.innerHTML = data['h'];
-  stockLowPrice.innerHTML = data['l'];
-  changeArrows(data['d']);
-  stockChange.innerHTML = data['d'];
-  stockChangePercent.innerHTML = data['dp'];
   /* recommendation trends */
   var recommendationTrends = ('recommendation_trends' in data) ? data['recommendation_trends'] : null;
   if (recommendationTrends) {
@@ -259,28 +240,57 @@ function callAPI(route, stockSymbol, callback) {
 
 function fillCompanyTabs(data) {
   if (Object.keys(data).length > 0) { searchSuccess = true }
-  var companyLogo = document.getElementById('company-logo');
-  var companyName = document.getElementById('company-company-name');
-  var companyStockSymbol = document.getElementById('company-stock-symbol');
-  var companyStockCode = document.getElementById('company-stock-code');
-  var companyIpo = document.getElementById('company-ipo');
-  var companyCategory = document.getElementById('company-category');
 
-  companyLogo.src = data['logo'];
-  companyName.innerHTML = data['name'];
-  companyStockSymbol.innerHTML = data['ticker'];
-  companyStockCode.innerHTML = data['exchange'];
-  companyIpo.innerHTML = data['ipo'];
-  companyCategory.innerHTML = data['finnhubIndustry'];
+  var companyLogo = document.getElementById('company-logo')
+  var companyName = document.getElementById('company-company-name')
+  var companyStockSymbol = document.getElementById('company-stock-symbol')
+  var companyStockCode = document.getElementById('company-stock-code')
+  var companyIpo = document.getElementById('company-ipo')
+  var companyCategory = document.getElementById('company-category')
+  var stockStockSymbol = document.getElementById('stock-stock-symbol')
+
+  stockStockSymbol.innerHTML = data['ticker']
+  companyLogo.src = data['logo']
+  companyName.innerHTML = data['name']
+  companyStockSymbol.innerHTML = data['ticker']
+  companyStockCode.innerHTML = data['exchange']
+  companyIpo.innerHTML = data['ipo']
+  companyCategory.innerHTML = data['finnhubIndustry']
+}
+
+function fillStockTabs(data) {
+  if (Object.keys(data).length > 0) { searchSuccess = true }
+
+  var stockTradingDay = document.getElementById('stock-trading-day')
+  var stockClosingPrice = document.getElementById('stock-closing-price')
+  var stockOpeningPrice = document.getElementById('stock-opening-price')
+  var stockHighPrice = document.getElementById('stock-high-price')
+  var stockLowPrice = document.getElementById('stock-low-price')
+  var stockChange = document.getElementById('stock-change')
+  var stockChangePercent = document.getElementById('stock-change-percent')
+
+  stockTradingDay.innerHTML = unixEpochTimeConvert(data['t'])
+  stockClosingPrice.innerHTML = data['pc']
+  stockOpeningPrice.innerHTML = data['o']
+  stockHighPrice.innerHTML = data['h']
+  stockLowPrice.innerHTML = data['l']
+  changeArrows(data['d'])
+  stockChange.innerHTML = data['d']
+  stockChangePercent.innerHTML = data['dp']
+}
+
+function initSearch() {
+  searchSuccess = false
 }
 
 function performSearch() {
   var searchInputElement = document.getElementById('search-input')
   var stockSymbol = searchInputElement.value
-  searchSuccess = false
 
   console.log("performSearch: " + stockSymbol);
+  initSearch()
   callAPI('company_profile_2', stockSymbol, fillCompanyTabs)
+  callAPI('company_quote', stockSymbol, fillStockTabs)
   updateSearchResult()
 
   fetch("search?stock_symbol=" + stockSymbol, {
@@ -292,8 +302,6 @@ function performSearch() {
   })
   .then(response => response.json())
   .then(data => {
-    // FIXME: remove the log
-    console.log(data);
     if (Object.keys(data).length == 0 || data['success'] != true) {
       // Cannot find record for this symbol
       changeSearchState(searchState.Error);
