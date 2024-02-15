@@ -139,7 +139,7 @@ function fillChart(symbol, data) {
     },
 
     subtitle: {
-        text: '<a href="https://polygon.io/">Source: Polygon.io</a>',
+        text: '<a href="https://polygon.io/" target="_blank">Source: Polygon.io</a>',
         useHTML: true,
     },
 
