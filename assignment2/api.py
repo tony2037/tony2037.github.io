@@ -32,7 +32,10 @@ def company_quote(symbol: str):
 def company_recommendation_trends(symbol: str):
     api = f'https://finnhub.io/api/v1/stock/recommendation?symbol={symbol}&token={FINNHUB_API_KEY}'
     res = api_get_wrapper(api, json.loads)
-    return res
+    if not res or len(res) == 0:
+        print('company_recommendation_trends fail')
+        return {}
+    return res[-1]
 
 def company_news(symbol: str):
     TODAY = date.today()
@@ -79,10 +82,7 @@ def finnhub_wrapper(symbol: str):
         res[key] = quote[key]
 
     trends = company_recommendation_trends(symbol)
-    if not trends or len(trends) == 0:
-        print('company_recommendation_trends fail')
-        return {}
-    res['recommendation_trends'] = trends[-1]
+    res['recommendation_trends'] = trends
 
     news = company_news(symbol)
     if not news or len(news) == 0:

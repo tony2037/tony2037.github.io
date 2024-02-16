@@ -11,12 +11,6 @@ const searchState = {
   'Success': 1,
   'Error': 2
 };
-var searchSuccess = false
-
-function updateSearchResult() {
-  if (searchSuccess) { changeSearchState('Success') }
-  else { changeSearchState('Error') }
-}
 
 function changeSearchState(state) {
   var errorBlock = document.querySelector('.result-error#result-bg');
@@ -59,50 +53,6 @@ function changeArrows(change) {
   else {
     changeArrow(arrows, false);
   }
-}
-
-function fillData(data) {
-  /* recommendation trends */
-  var squareStrongSell = document.getElementById('square-strongSell');
-  var squareSell = document.getElementById('square-sell');
-  var squareHold = document.getElementById('square-hold');
-  var squareBuy = document.getElementById('square-buy');
-  var squareStrongBuy = document.getElementById('square-strongBuy');
-
-  /* recommendation trends */
-  var recommendationTrends = ('recommendation_trends' in data) ? data['recommendation_trends'] : null;
-  if (recommendationTrends) {
-    squareStrongSell.innerHTML = recommendationTrends['strongSell'];
-    squareSell.innerHTML = recommendationTrends['sell'];
-    squareHold.innerHTML = recommendationTrends['hold'];
-    squareBuy.innerHTML = recommendationTrends['buy'];
-    squareStrongBuy.innerHTML = recommendationTrends['strongBuy'];
-  }
-  /* news tabs */
-  var top5 = data['company_news']
-  for (var i = 0; i < top5.length; i++) {
-    var news = top5[i]
-    /* data */
-    var image = news['image']
-    var title = news['headline']
-    var epoch = news['datetime']
-    var datetime = unixEpochTimeConvert(epoch)
-    var url = news['url']
-    /* ids */
-    var imgId = `news-img-${i}`
-    var imgElement = document.getElementById(imgId)
-    imgElement.src = image
-    var titleId = `news-title-${i}`
-    var titleElement = document.getElementById(titleId)
-    titleElement.innerHTML = title
-    var dateId = `news-date-${i}`
-    var dateElement = document.getElementById(dateId)
-    dateElement.innerHTML = datetime
-    var urlId = `news-url-${i}`
-    var urlElement = document.getElementById(urlId)
-    urlElement.href = url
-  }
-
 }
 
 function fillChart(symbol, data) {
@@ -239,7 +189,8 @@ function callAPI(route, stockSymbol, callback) {
 }
 
 function fillCompanyTabs(data) {
-  if (Object.keys(data).length > 0) { searchSuccess = true }
+  console.log(Object.keys(data).length)
+  if (Object.keys(data).length > 0) { changeSearchState(searchState.Success) }
 
   var companyLogo = document.getElementById('company-logo')
   var companyName = document.getElementById('company-company-name')
@@ -259,7 +210,7 @@ function fillCompanyTabs(data) {
 }
 
 function fillStockTabs(data) {
-  if (Object.keys(data).length > 0) { searchSuccess = true }
+  if (Object.keys(data).length > 0) { changeSearchState(searchState.Success) }
 
   var stockTradingDay = document.getElementById('stock-trading-day')
   var stockClosingPrice = document.getElementById('stock-closing-price')
@@ -279,41 +230,65 @@ function fillStockTabs(data) {
   stockChangePercent.innerHTML = data['dp']
 }
 
-function initSearch() {
-  searchSuccess = false
+function fillRecommendationTrends(data) {
+  if (Object.keys(data).length > 0) {  changeSearchState(searchState.Success) }
+
+  console.log(data)
+  /* recommendation trends */
+  var squareStrongSell = document.getElementById('square-strongSell');
+  var squareSell = document.getElementById('square-sell');
+  var squareHold = document.getElementById('square-hold');
+  var squareBuy = document.getElementById('square-buy');
+  var squareStrongBuy = document.getElementById('square-strongBuy');
+
+  /* recommendation trends */
+  squareStrongSell.innerHTML = data['strongSell'];
+  squareSell.innerHTML = data['sell'];
+  squareHold.innerHTML = data['hold'];
+  squareBuy.innerHTML = data['buy'];
+  squareStrongBuy.innerHTML = data['strongBuy'];
+}
+
+function fillNews(data) {
+  /* news tabs */
+  for (var i = 0; i < data.length; i++) {
+    var news = data[i]
+    /* data */
+    var image = news['image']
+    var title = news['headline']
+    var epoch = news['datetime']
+    var datetime = unixEpochTimeConvert(epoch)
+    var url = news['url']
+    /* ids */
+    var imgId = `news-img-${i}`
+    var imgElement = document.getElementById(imgId)
+    imgElement.src = image
+    var titleId = `news-title-${i}`
+    var titleElement = document.getElementById(titleId)
+    titleElement.innerHTML = title
+    var dateId = `news-date-${i}`
+    var dateElement = document.getElementById(dateId)
+    dateElement.innerHTML = datetime
+    var urlId = `news-url-${i}`
+    var urlElement = document.getElementById(urlId)
+    urlElement.href = url
+  }
 }
 
 function performSearch() {
   var searchInputElement = document.getElementById('search-input')
   var stockSymbol = searchInputElement.value
 
-  console.log("performSearch: " + stockSymbol);
-  initSearch()
+  stockSymbol = stockSymbol.toUpperCase()
+  console.log("performSearch: " + stockSymbol)
+  changeSearchState(searchState.Error)
   callAPI('company_profile_2', stockSymbol, fillCompanyTabs)
   callAPI('company_quote', stockSymbol, fillStockTabs)
-  updateSearchResult()
-
-  fetch("search?stock_symbol=" + stockSymbol, {
-    credentials: "include",
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json"
-    },
+  callAPI('company_recommendation_trends', stockSymbol, fillRecommendationTrends)
+  callAPI('company_news', stockSymbol, fillNews)
+  callAPI('polygon_wrapper', stockSymbol, (data)=>{
+    fillChart(stockSymbol, data)
   })
-  .then(response => response.json())
-  .then(data => {
-    if (Object.keys(data).length == 0 || data['success'] != true) {
-      // Cannot find record for this symbol
-      changeSearchState(searchState.Error);
-    }
-    else {
-      // Found the record
-      changeSearchState(searchState.Success);
-      fillData(data);
-      'polygon_res' in data ? fillChart(data['ticker'], data['polygon_res']) : null
-    }
-  })
-  .catch(error => console.error("Error:", error));
 }
 
 function clearSearch() {
