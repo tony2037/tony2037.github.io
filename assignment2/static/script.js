@@ -189,8 +189,8 @@ function callAPI(route, stockSymbol, callback) {
 }
 
 function fillCompanyTabs(data) {
-  console.log(Object.keys(data).length)
   if (Object.keys(data).length > 0) { changeSearchState(searchState.Success) }
+  else { changeSearchState(searchState.Error) }
 
   var companyLogo = document.getElementById('company-logo')
   var companyName = document.getElementById('company-company-name')
@@ -233,7 +233,6 @@ function fillStockTabs(data) {
 function fillRecommendationTrends(data) {
   if (Object.keys(data).length > 0) {  changeSearchState(searchState.Success) }
 
-  console.log(data)
   /* recommendation trends */
   var squareStrongSell = document.getElementById('square-strongSell');
   var squareSell = document.getElementById('square-sell');
@@ -281,7 +280,6 @@ function performSearch() {
 
   stockSymbol = stockSymbol.toUpperCase()
   console.log("performSearch: " + stockSymbol)
-  changeSearchState(searchState.Error)
   callAPI('company_profile_2', stockSymbol, fillCompanyTabs)
   callAPI('company_quote', stockSymbol, fillStockTabs)
   callAPI('company_recommendation_trends', stockSymbol, fillRecommendationTrends)
