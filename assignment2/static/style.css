@@ -114,6 +114,10 @@ form.search-form {
   display: flex;
 }
 
+p.result-error {
+  color: #3D3F45;
+}
+
 .result-error#result-bg {
   margin: auto;
   background-color: #e8e8e8;
