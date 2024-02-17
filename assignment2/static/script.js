@@ -80,8 +80,12 @@ function fillChart(symbol, data) {
 
   // Create the chart
   Highcharts.stockChart('chart-container', {
-    rangeSelector: {
-        selected: 1
+    plotOptions: {
+      series: {
+        pointWidth: 5,
+        pointPadding: 0,
+        groupPadding: 0.1
+      }
     },
 
     title: {
@@ -94,6 +98,7 @@ function fillChart(symbol, data) {
     },
 
     rangeSelector: {
+      selected: 0,
       buttons: [{
           type: 'day',
           count: 7,
@@ -115,7 +120,6 @@ function fillChart(symbol, data) {
           count: 6,
           text: '6m'
       }],
-      selected: 3,
       inputEnabled: false
   },
 
