@@ -292,6 +292,7 @@ function performSearch() {
 function clearSearch() {
   document.getElementById('search-input').value = "";
   changeSearchState(searchState.Init);
+  openTab('company', 'tab-company');
 }
 
 /* Switch the tabs in the result box */
