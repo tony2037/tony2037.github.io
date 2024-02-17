@@ -139,7 +139,7 @@ p.result-error {
 
 .result-tabs-bg{
   margin: auto;
-  background-color: #eaeaea;
+  background-color: #FAFAFC;
   height: 5ch;
   text-align: left;
   font-size: medium;
@@ -149,7 +149,11 @@ p.result-error {
 
 button.result-tab {
   margin-right: auto;
-  margin: 10px;
+  margin: 0px;
+  font-size: large;
+  letter-spacing: 1px;
+  padding: 15px;
+  color: #3D3F45;
   background-color: transparent;
   background-repeat: no-repeat;
   border: none;
@@ -157,6 +161,10 @@ button.result-tab {
   overflow: hidden;
   outline: none;
   height: 100%;
+}
+
+button.result-tab:hover {
+  background-color: #E0E0E0;
 }
 
 img.result-company#company-logo {
