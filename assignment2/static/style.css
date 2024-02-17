@@ -41,7 +41,8 @@ body {
 h1.title {
   font-size: 35px;
   letter-spacing: 2px;
-  color: #27211A;
+  color: #3D3F45;
+  margin-top: 0px;
 }
 
 .search-box {

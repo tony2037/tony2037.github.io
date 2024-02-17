@@ -210,8 +210,6 @@ function fillCompanyTabs(data) {
 }
 
 function fillStockTabs(data) {
-  if (Object.keys(data).length > 0) { changeSearchState(searchState.Success) }
-
   var stockTradingDay = document.getElementById('stock-trading-day')
   var stockClosingPrice = document.getElementById('stock-closing-price')
   var stockOpeningPrice = document.getElementById('stock-opening-price')
@@ -231,8 +229,6 @@ function fillStockTabs(data) {
 }
 
 function fillRecommendationTrends(data) {
-  if (Object.keys(data).length > 0) {  changeSearchState(searchState.Success) }
-
   /* recommendation trends */
   var squareStrongSell = document.getElementById('square-strongSell');
   var squareSell = document.getElementById('square-sell');
