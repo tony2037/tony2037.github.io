@@ -83,6 +83,7 @@ function fillChart(symbol, data) {
     plotOptions: {
       series: {
         pointWidth: 5,
+        pointRange: 1,
         pointPadding: 0,
         groupPadding: 0.1
       }
