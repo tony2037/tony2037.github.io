@@ -251,6 +251,12 @@ function fillRecommendationTrends(data) {
 
 function fillNews(data) {
   /* news tabs */
+  for (var i = 0; i < 5; i++) {
+    var rowId = `news-row-${i}`
+    var row = document.getElementById(rowId)
+    row.style.display = "none"
+  }
+
   for (var i = 0; i < data.length; i++) {
     var news = data[i]
     /* data */
@@ -260,6 +266,9 @@ function fillNews(data) {
     var datetime = unixEpochTimeConvert(epoch)
     var url = news['url']
     /* ids */
+    var rowId = `news-row-${i}`
+    var row = document.getElementById(rowId)
+    row.style.display = ''
     var imgId = `news-img-${i}`
     var imgElement = document.getElementById(imgId)
     imgElement.src = image
@@ -288,12 +297,13 @@ function performSearch() {
   callAPI('polygon_wrapper', stockSymbol, (data)=>{
     fillChart(stockSymbol, data)
   })
+  openTab('company', 'tab-company')
 }
 
 function clearSearch() {
+  openTab('company', 'tab-company');
   document.getElementById('search-input').value = "";
   changeSearchState(searchState.Init);
-  openTab('company', 'tab-company');
 }
 
 /* Switch the tabs in the result box */
