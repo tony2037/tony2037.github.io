@@ -15,6 +15,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { HighchartsChartModule } from 'highcharts-angular';
+import { AppRoutingModule } from './app.routes';
 
 @NgModule({
     declarations: [
@@ -34,7 +35,8 @@ import { HighchartsChartModule } from 'highcharts-angular';
         MatAutocompleteModule,
         ReactiveFormsModule,
         MatProgressSpinnerModule,
-        HighchartsChartModule
+        HighchartsChartModule,
+        AppRoutingModule
     ],
     bootstrap: [AppComponent]
 })
