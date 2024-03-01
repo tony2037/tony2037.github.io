@@ -1,0 +1,17 @@
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top" style="background-color: #11077d; overflow: hidden;">
+	<span class="navbar-brand mb-0 h1"><a (click)="onClickSearch()" class="home-link" routerLink="/">Stock Search</a></span>
+	<button style="outline: none;" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed" aria-label="Toggle navigation">
+	  <span class="navbar-toggler-icon"></span>
+	</button>
+	<div class="collapse navbar-collapse" [ngbCollapse]="isCollapsed" id="navbarNav">
+	  <ul class="navbar-nav ml-auto">
+		<li id="search-button" style="text-align: right; border: white solid; border-radius: 17px; padding-left: 5%; padding-right: 5%;" class="nav-item"><a id="search-link" (click)="onClickSearch()" style="color: white;" class="nav-link" routerLink="/">Search</a></li>
+		<li id="watchlist-button" style="text-align: right; border:none; border-radius: 17px; padding-left: 5%; padding-right: 5%;" class="nav-item"><a id="watchlist-link" (click)="onClickWatchlist()" class="nav-link" routerLink="/watchlist">Watchlist</a></li>
+		<li id="portfolio-button" style="text-align: right; border: none; border-radius: 17px; padding-left: 5%; padding-right: 5%;" class="nav-item"><a id="portfolio-link" (click)="onClickPortfolio()" class="nav-link" routerLink="/portfolio">Portfolio</a></li>
+	  </ul>
+	</div>
+  </nav>
+  
+  <main role="main">
+	<router-outlet></router-outlet>
+  </main>
