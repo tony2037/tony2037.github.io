@@ -4,3 +4,5 @@ __pycache__/
 *.cfg
 assignment3/frontend/node_modules/
 assignment3/frontend/dist/
+node_modules/
+.vscode/
