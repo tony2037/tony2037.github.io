@@ -7,10 +7,12 @@ import { DetailsComponent } from './details/details.component';
 import { NgModule } from '@angular/core';
 
 export const routes: Routes = [
-    { path: '', component: SearchComponent }, 
+    { path: '', redirectTo: 'search/home', pathMatch: 'full' },
+    { path: 'search/home', component: SearchComponent },
     { path: 'watchlist', component: WatchlistComponent }, 
     { path: 'portfolio', component: PortfolioComponent },
-    { path: 'details/:ticker', component: DetailsComponent }
+    { path: 'search/:ticker', component: DetailsComponent },
+    { path: '**', redirectTo: 'search/home' }
 ];
 
 @NgModule({

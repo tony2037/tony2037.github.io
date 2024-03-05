@@ -1,4 +1,5 @@
-import { Component, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import { Router } from '@angular/router';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {Observable} from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, tap } from 'rxjs/operators';
@@ -33,7 +34,7 @@ export class SearchComponent implements OnInit {
   stockCodeControl = new FormControl();
   filteredOptions: StockOption[] = [];
 
-  constructor(private http: HttpClient) { }
+  constructor(private router : Router, private http: HttpClient) { }
 
   ngOnInit(): void {
     this.stockCodeControl.valueChanges
@@ -66,9 +67,10 @@ export class SearchComponent implements OnInit {
   }
 
   search(): void {
-    const stockCode = this.stockCodeControl.value;
+    const stockCode = this.stockCodeControl.value.toUpperCase();
     // Perform search action using stockCode
     console.log('Searching for stock:', stockCode);
+    this.router.navigate(['/search', stockCode])
   }
 
   clear(): void {
