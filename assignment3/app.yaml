@@ -1,0 +1,15 @@
+runtime: nodejs12
+
+handlers:
+  - url: /api/.*
+    script: auto
+
+  - url: /
+    static_files: frontend/index.html
+    upload: frontend/index.html
+
+  - url: /
+    static_dir: frontend
+
+env_variables:
+  PORT: 8080
