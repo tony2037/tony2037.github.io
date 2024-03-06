@@ -84,7 +84,7 @@ export class DetailsComponent implements OnInit , OnDestroy {
         this.lastDay = this.formatTimestamp(this.lastTimeStamp, true);
         const diffInSeconds = this.lastTimeStamp-this.currentTimestamp;
         const diffInHours = diffInSeconds / 3600;
-        this.marketStatus = diffInHours > 6;
+        this.marketStatus = diffInHours < 3;
       }
     });
 
