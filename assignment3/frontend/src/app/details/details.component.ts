@@ -25,9 +25,11 @@ export class DetailsComponent implements OnInit , OnDestroy {
   public closePrice :number = 0.0;
   public marketStatus :boolean = true;
   public ipoDate :string = "";
-  public logoUrl :string = "";
+  public logoUrl :string = "https://i.imgur.com/NO25iZV.png";
   public webpage :string = "";
   public industry :string = "";
+  public currentPosition: number = 0;
+  public currentCash: number = 0;
 
   private POLYGON_API_KEY = "REDACTED_POLYGON_KEY";
   private FINNHUB_API_KEY = "REDACTED_FINNHUB_KEY";
@@ -36,13 +38,13 @@ export class DetailsComponent implements OnInit , OnDestroy {
   success :boolean = false;
 
   constructor(private route:ActivatedRoute, private http:HttpClient) {
-    let ticker = this.route.snapshot.paramMap.get('ticker');
-    if (!ticker) {
+    this.ticker = this.route.snapshot.paramMap.get('ticker');
+    if (!this.ticker) {
       this.failCallback();
     }
-    ticker = ticker!.toUpperCase();
+    this.ticker = this.ticker!.toUpperCase();
 
-    this.SendProfile2(ticker).subscribe((data) => {
+    this.SendProfile2(this.ticker).subscribe((data) => {
       const keys = Object.keys(data);
       if (keys.length == 0) {
         this.failCallback();
@@ -58,7 +60,7 @@ export class DetailsComponent implements OnInit , OnDestroy {
       }
     });
 
-    this.SendQuote(ticker).subscribe((data) => {
+    this.SendQuote(this.ticker).subscribe((data) => {
       const keys = Object.keys(data);
       if (keys.length == 0) {
         this.failCallback();
@@ -82,7 +84,7 @@ export class DetailsComponent implements OnInit , OnDestroy {
       }
     });
 
-    this.SendAggs(ticker).subscribe((data) => {
+    this.SendAggs(this.ticker).subscribe((data) => {
       const keys = Object.keys(data);
       if (keys.length == 0) {
         this.failCallback();
@@ -152,6 +154,14 @@ export class DetailsComponent implements OnInit , OnDestroy {
   SendProfile2(symbol:String){
     // FIXME
     return this.http.get<any>(`https://finnhub.io/api/v1/stock/profile2?symbol=${symbol}&token=${this.FINNHUB_API_KEY}`);
+  }
+
+  buyit() {
+
+  }
+
+  sellit() {
+
   }
 
 }

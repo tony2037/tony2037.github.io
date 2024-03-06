@@ -7,7 +7,22 @@
         No results found. Please enter valid Ticker
     </div>
     <ng-template #result_block>
-        <div class="openMarketLabel">
+        <div class="row">
+            <div class="col-4">
+                <span><b> {{ticker}} </b></span>
+                <span> {{companyName}} </span>
+                <span> {{exchangeCode}} </span>
+                <button (click)="buyit()" type="button" class="btn btn-success">Buy</button>
+                <button (click)="sellit()" type="button" class="btn btn-danger">Sell</button>
+            </div>
+            <div class="col-4"><img [src]="logoUrl" alt="Company Logo"></div>
+            <div class="col-4">
+                <span> {{lastPrice}} </span>
+                <span> {{change}} ({{changePercentage}}%) </span>
+                <span> {{currentSecond}} </span>
+            </div>
+        </div>
+        <div>
             <span *ngIf="marketStatus == false" style="color: red;">Market Closed on {{ lastDay }} 13:00:00</span>
             <span *ngIf="marketStatus == true" style="color: green;">Market is Open</span>
         </div>
