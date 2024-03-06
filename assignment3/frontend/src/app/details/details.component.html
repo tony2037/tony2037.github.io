@@ -7,6 +7,15 @@
         No results found. Please enter valid Ticker
     </div>
     <ng-template #result_block>
-        <p>Success</p>
+        <div class="openMarketLabel">
+            <span *ngIf="marketStatus == false" style="color: red;">Market Closed on {{ lastDay }} 13:00:00</span>
+            <span *ngIf="marketStatus == true" style="color: green;">Market is Open</span>
+        </div>
+        <mat-tab-group mat-stretch-tabs>
+            <mat-tab label="Summary"> Summary </mat-tab>
+            <mat-tab label="Top News"> Top News </mat-tab>
+            <mat-tab label="Charts"> Charts </mat-tab>
+            <mat-tab label="Insights"> Insights </mat-tab>
+          </mat-tab-group>
     </ng-template>
 </div>
