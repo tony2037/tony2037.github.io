@@ -1,7 +1,8 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { tick } from '@angular/core/testing';
+import { ModalDismissReasons, NgbDatepickerModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-details',
@@ -36,8 +37,11 @@ export class DetailsComponent implements OnInit , OnDestroy {
 
   spinner :boolean = true;
   success :boolean = false;
+  stockCartQuantity :number = 0;
+  stockCartValue :number = 0.0;
+  closeResult = '';
 
-  constructor(private route:ActivatedRoute, private http:HttpClient) {
+  constructor(private route:ActivatedRoute, private http:HttpClient, private modalService: NgbModal) {
     this.ticker = this.route.snapshot.paramMap.get('ticker');
     if (!this.ticker) {
       this.failCallback();
@@ -156,12 +160,47 @@ export class DetailsComponent implements OnInit , OnDestroy {
     return this.http.get<any>(`https://finnhub.io/api/v1/stock/profile2?symbol=${symbol}&token=${this.FINNHUB_API_KEY}`);
   }
 
-  buyit() {
-
+  buyit(quantity: string, curPrice: number) {
+    if(quantity == ''){
+      quantity = '0';
+    }
+    quantity = quantity.match(/\d+/g)?.join('') || '0';
+    this.stockCartQuantity = parseInt(quantity, 10);
+    this.stockCartValue = parseFloat((this.stockCartQuantity * curPrice).toFixed(2));
+    console.log(`bug ${this.stockCartQuantity} x ${curPrice}  = ${this.stockCartValue}`);
   }
 
   sellit() {
 
+  }
+
+  openModal(content: TemplateRef<any>) {
+    this.stockCartQuantity = 0;
+    this.stockCartValue = 0;
+    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+      this.closeResult = `Closed with: ${result}`;
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
+  }
+
+  private getDismissReason(reason: any): string {
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return `with: ${reason}`;
+    }
+  }
+
+  onKey(quantity: string, curPrice: number) {
+    if(quantity == ''){
+      quantity = '0';
+    }
+    quantity = quantity.match(/\d+/g)?.join('') || '0';
+    this.stockCartQuantity = parseInt(quantity, 10);
+    this.stockCartValue = parseFloat((this.stockCartQuantity * curPrice).toFixed(2));
   }
 
 }
