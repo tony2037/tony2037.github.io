@@ -10,6 +10,7 @@ import { HttpClient } from '@angular/common/http';
 export class DetailsComponent implements OnInit , OnDestroy {
   public ticker :any;
   spinner :boolean = true;
+  success :boolean = false;
 
   constructor(private route:ActivatedRoute, private http:HttpClient) {
     let ticker = this.route.snapshot.paramMap.get('ticker');
@@ -25,7 +26,6 @@ export class DetailsComponent implements OnInit , OnDestroy {
       }
       else {
         this.successCallback();
-        console.log('Data received:', data);
       }
     });
   }
@@ -39,11 +39,13 @@ export class DetailsComponent implements OnInit , OnDestroy {
 
   successCallback() {
     this.spinner = false;
+    this.success = true;
     console.log('success callbcak');
   }
 
   failCallback() {
     this.spinner = false;
+    this.success = false;
     console.log('fail callbcak');
   }
 
