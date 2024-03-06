@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { tick } from '@angular/core/testing';
 import { ModalDismissReasons, NgbDatepickerModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -31,6 +31,7 @@ export class DetailsComponent implements OnInit , OnDestroy {
   public industry :string = "";
   public currentPosition: number = 0;
   public currentCash: number = 0;
+  public peers: string[] = [];
 
   private POLYGON_API_KEY = "REDACTED_POLYGON_KEY";
   private FINNHUB_API_KEY = "REDACTED_FINNHUB_KEY";
@@ -41,7 +42,7 @@ export class DetailsComponent implements OnInit , OnDestroy {
   stockCartValue :number = 0.0;
   closeResult = '';
 
-  constructor(private route:ActivatedRoute, private http:HttpClient, private modalService: NgbModal) {
+  constructor(private router: Router, private route:ActivatedRoute, private http:HttpClient, private modalService: NgbModal) {
     this.ticker = this.route.snapshot.paramMap.get('ticker');
     if (!this.ticker) {
       this.failCallback();
@@ -97,6 +98,10 @@ export class DetailsComponent implements OnInit , OnDestroy {
 
       }
     });
+
+    this.SendPeers(this.ticker).subscribe((data) => {
+      this.peers = data;
+    });
   }
 
   ngOnDestroy(): void {
@@ -134,6 +139,13 @@ export class DetailsComponent implements OnInit , OnDestroy {
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
+  }
+
+  SendPeers(symbol:String) {
+    symbol = symbol.toUpperCase();
+    const api = `https://finnhub.io/api/v1/stock/peers?symbol=${symbol}&token=${this.FINNHUB_API_KEY}`;
+    console.log(`call api: ${api}`);
+    return this.http.get<any>(api);
   }
 
   SendAggs(symbol:String) {
@@ -201,6 +213,12 @@ export class DetailsComponent implements OnInit , OnDestroy {
     quantity = quantity.match(/\d+/g)?.join('') || '0';
     this.stockCartQuantity = parseInt(quantity, 10);
     this.stockCartValue = parseFloat((this.stockCartQuantity * curPrice).toFixed(2));
+  }
+
+  reloadAndNavigate(peer: string) {
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      this.router.navigate(['/search/' + peer]);
+    });
   }
 
 }

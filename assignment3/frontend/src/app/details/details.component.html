@@ -48,7 +48,39 @@
             <span *ngIf="marketStatus == true" style="color: green;">Market is Open</span>
         </div>
         <mat-tab-group mat-stretch-tabs>
-            <mat-tab label="Summary"> Summary </mat-tab>
+            <mat-tab label="Summary">
+                <ng-template matTabContent>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="row">
+                                        <div class="col-4">
+                                            High Price: <br>
+                                            Low Price: <br>
+                                            Open Price: <br>
+                                            Prev. Close: <br>
+                                        </div>
+                                        <div class="col-1">
+                                            {{ highPrice }} <br>
+                                            {{ lowPrice }} <br>
+                                            {{ openPrice }} <br>
+                                            {{ closePrice }} <br>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <h1><u><b>About the company</b></u></h1>
+                            IPO Start Date: {{ ipoDate }}<br><br>
+                            Industry: {{ industry }}<br><br>
+                            Webpage: <a [href]="webpage">{{ webpage }}</a><br><br> 
+                            Company peers:<br><br>
+                            <a *ngFor="let peer of peers" (click)="reloadAndNavigate(peer)"> {{ peer }}, </a>
+                        </div>
+                        <div class="col-sm-6"></div>
+                    </div>
+                </ng-template>
+            </mat-tab>
             <mat-tab label="Top News"> Top News </mat-tab>
             <mat-tab label="Charts"> Charts </mat-tab>
             <mat-tab label="Insights"> Insights </mat-tab>
