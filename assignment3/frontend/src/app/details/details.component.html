@@ -77,7 +77,17 @@
                             Company peers:<br><br>
                             <a *ngFor="let peer of peers" (click)="reloadAndNavigate(peer)"> {{ peer }}, </a>
                         </div>
-                        <div class="col-sm-6"></div>
+                        <div class="col-sm-6">
+                            <div *ngIf="chartLoaded == true">
+                                <highcharts-chart
+                                    [Highcharts]="Highcharts"
+                                    [constructorType]="'stockChart'"
+                                    [options]="chartSummaryOptions"
+                                    [(update)]="chartUpdateFlag"
+                                    style="width: 100%; display: block;"
+                                ></highcharts-chart>
+                            </div>
+                        </div>
                     </div>
                 </ng-template>
             </mat-tab>

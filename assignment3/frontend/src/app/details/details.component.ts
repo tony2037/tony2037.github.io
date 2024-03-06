@@ -4,6 +4,12 @@ import { HttpClient } from '@angular/common/http';
 import { tick } from '@angular/core/testing';
 import { ModalDismissReasons, NgbDatepickerModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
+import * as Highcharts from 'highcharts/highstock';
+import IndicatorsCore from 'highcharts/indicators/indicators';
+import vbp from 'highcharts/indicators/volume-by-price';
+IndicatorsCore(Highcharts)
+vbp(Highcharts);
+
 @Component({
   selector: 'app-details',
   templateUrl: './details.component.html',
@@ -38,9 +44,16 @@ export class DetailsComponent implements OnInit , OnDestroy {
 
   spinner :boolean = true;
   success :boolean = false;
+  loadSummaryChart :boolean = false;
   stockCartQuantity :number = 0;
   stockCartValue :number = 0.0;
   closeResult = '';
+  Highcharts!: typeof Highcharts
+  chartSummaryOptions!: Highcharts.Options
+  chartSummaryData: number[] = [] 
+  chartChartOptions!: Highcharts.Options
+  chartUpdateFlag :boolean = false;
+  chartLoaded :boolean = false;
 
   constructor(private router: Router, private route:ActivatedRoute, private http:HttpClient, private modalService: NgbModal) {
     this.ticker = this.route.snapshot.paramMap.get('ticker');
@@ -48,6 +61,8 @@ export class DetailsComponent implements OnInit , OnDestroy {
       this.failCallback();
     }
     this.ticker = this.ticker!.toUpperCase();
+
+    this.buildHighcharts();
 
     this.SendProfile2(this.ticker).subscribe((data) => {
       const keys = Object.keys(data);
@@ -89,16 +104,6 @@ export class DetailsComponent implements OnInit , OnDestroy {
       }
     });
 
-    this.SendAggs(this.ticker).subscribe((data) => {
-      const keys = Object.keys(data);
-      if (keys.length == 0) {
-        this.failCallback();
-      }
-      else {
-
-      }
-    });
-
     this.SendPeers(this.ticker).subscribe((data) => {
       this.peers = data;
     });
@@ -121,6 +126,57 @@ export class DetailsComponent implements OnInit , OnDestroy {
     this.spinner = false;
     this.success = false;
     console.log('fail callbcak');
+  }
+
+  buildHighcharts() {
+    interface Result {
+      c: number;
+      h: number;
+      l: number;
+      n: number;
+      o: number;
+      t: number;
+      v: number;
+      vw: number;
+    }
+
+    interface ApiResponse {
+      resultsCount: number;
+      results: Result[];
+    }
+
+    this.Highcharts = Highcharts;
+
+    // FIXME, use hourly data instead
+    this.SendAggs(this.ticker).subscribe((data) => {
+      const parsedData: ApiResponse = {
+        resultsCount: data.resultsCount,
+        results: data.results
+      };
+      const results: number[] = parsedData.results.map(result => result.c);
+      this.chartSummaryData = results;
+
+      // fill the chart options
+      this.chartLoaded = true;
+      this.chartUpdateFlag = true;
+      this.chartSummaryOptions = {
+        rangeSelector:{
+        enabled: false
+        },
+        title: {
+          text: `${this.ticker} Hourly Price Variation`
+        },
+        series: [{
+          data: this.chartSummaryData,
+          type: 'line',
+          color: 'red',
+          name: this.ticker
+        }],
+        accessibility: {
+          enabled: false // for people with difficulty
+        }
+      }
+    });
   }
 
   private formatTimestamp(timestamp: number, onlyday: boolean): string {
