@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { tick } from '@angular/core/testing';
+import { DatePipe } from '@angular/common';
 import { ModalDismissReasons, NgbDatepickerModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import * as Highcharts from 'highcharts/highstock';
@@ -54,8 +54,11 @@ export class DetailsComponent implements OnInit , OnDestroy {
   chartChartOptions!: Highcharts.Options
   chartUpdateFlag :boolean = false;
   chartLoaded :boolean = false;
+  news: any[] = [];
 
-  constructor(private router: Router, private route:ActivatedRoute, private http:HttpClient, private modalService: NgbModal) {
+  constructor(private router: Router, private route:ActivatedRoute, 
+    private http:HttpClient, private modalService: NgbModal,
+    private datePipe: DatePipe) {
     this.ticker = this.route.snapshot.paramMap.get('ticker');
     if (!this.ticker) {
       this.failCallback();
@@ -107,6 +110,8 @@ export class DetailsComponent implements OnInit , OnDestroy {
     this.SendPeers(this.ticker).subscribe((data) => {
       this.peers = data;
     });
+
+    this.buildNews(this.ticker);
   }
 
   ngOnDestroy(): void {
@@ -126,6 +131,18 @@ export class DetailsComponent implements OnInit , OnDestroy {
     this.spinner = false;
     this.success = false;
     console.log('fail callbcak');
+  }
+
+  buildNews(symbol:String) {
+    this.SendNews(symbol).subscribe((data) => {
+      let n = data.length;
+      let count = 0;
+      for (let i = 0; i < n && count < 8; i++) {
+        if (data[i].image.length == 0) continue;
+        this.news.push(data[i]);
+        count++;
+      }
+    });
   }
 
   buildHighcharts() {
@@ -179,6 +196,12 @@ export class DetailsComponent implements OnInit , OnDestroy {
     });
   }
 
+  formatTimestampMdY(timestamp: number): string {
+    const date = new Date(timestamp * 1000);
+    const formattedDate = this.datePipe.transform(date, 'MMMM dd, yyyy');
+    return formattedDate || '';
+  }
+
   private formatTimestamp(timestamp: number, onlyday: boolean): string {
     const date = new Date(timestamp * 1000);
     const year = date.getFullYear();
@@ -195,6 +218,18 @@ export class DetailsComponent implements OnInit , OnDestroy {
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
+  }
+
+  SendNews(symbol:String) {
+    // FIXME: change api endpoint and check if we we front 30 days ago
+    symbol = symbol.toUpperCase();
+    const today = new Date();
+    const from = new Date();
+    from.setDate(from.getDate() - 30);
+    const FROM: string = this.formatDate(from);
+    const TO: string = this.formatDate(today);
+    const api = `https://finnhub.io/api/v1/company-news?symbol=${symbol}&from=${FROM}&to=${TO}&token=${this.FINNHUB_API_KEY}`;
+    return this.http.get<any>(api);
   }
 
   SendPeers(symbol:String) {

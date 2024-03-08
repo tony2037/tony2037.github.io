@@ -91,7 +91,49 @@
                     </div>
                 </ng-template>
             </mat-tab>
-            <mat-tab label="Top News"> Top News </mat-tab>
+            <mat-tab label="Top News">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-6" *ngFor="let article of news">
+                            <div (click)="openModal(content)" class="card h-100">
+                                <div class="row no-gutters">
+                                    <div class="col-md-4">
+                                        <img class="card-img" [src]="article.image" alt="">
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="card-body">
+                                            <p class="card-text">{{ article.headline }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <ng-template #content let-modal>
+                                <div class="modal-header" style="display: block;">
+                                    <button style="outline: none;" type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')"><span aria-hidden="true">&times;</span></button>
+                                    <h1 style="margin: 0;" class="modal-title"><b>{{article.related}}</b></h1>
+                                    <span style="color: gray;"><b>{{formatTimestampMdY(article.datetime)}}</b></span>
+                                </div>
+                                <div class="modal-body">
+                                    <span style="font-size: 20px;"><b>{{article.title}}</b><br></span>
+                                    <span style="font-size: 13px;">{{article.summary}}<br></span>
+                                    <span style="font-size: small; color: gray;">For more details click <a target="_blank" [href]="article.url">here</a></span>
+                                    <br><br><br>
+                                    <div class="card">
+                                        <div class="card-body">
+                                            Share<br><br>
+                                            <div style="display: flex;">
+                                                <a style="margin-right: 10px;" target="_blank" class="twitter-share-button" href="https://twitter.com/intent/tweet?text={{article.title}}&url={{article.url}}"><i class="fab fa-twitter fa-3x"></i></a>
+                                                <div class="fb-share-button" data-href="https://developers.facebook.com/docs/plugins/" data-layout="button_count" data-size="large"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u={{article.url}}&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore"><i class="fab fa-facebook-square fa-3x"></i></a></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </div>
+                    </div>
+                </div>
+            </mat-tab>
             <mat-tab label="Charts"> Charts </mat-tab>
             <mat-tab label="Insights"> Insights </mat-tab>
           </mat-tab-group>

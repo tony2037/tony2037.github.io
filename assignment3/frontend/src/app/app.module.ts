@@ -8,6 +8,7 @@ import { DetailsComponent } from './details/details.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { HttpClientModule } from '@angular/common/http';
+import { CommonModule, DatePipe } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -38,7 +39,11 @@ import { AppRoutingModule } from './app.routes';
         ReactiveFormsModule,
         MatProgressSpinnerModule,
         HighchartsChartModule,
+        CommonModule,
         AppRoutingModule
+    ],
+    providers: [
+        DatePipe
     ],
     bootstrap: [AppComponent]
 })
