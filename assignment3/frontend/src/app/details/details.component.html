@@ -138,7 +138,18 @@
                     </div>
                 </div>
             </mat-tab>
-            <mat-tab label="Charts"> Charts </mat-tab>
+            <mat-tab label="Charts">
+                <ng-template matTabContent>
+                    <div *ngIf="bigChartLoaded == true">
+                        <highcharts-chart
+                            [Highcharts]="Highcharts"
+                            [constructorType]="'stockChart'"
+                            [options]="bigChartOptions"
+                            style="width: 100%; display: block; height: 600px;"
+                        ></highcharts-chart>
+                    </div>
+                </ng-template>
+            </mat-tab>
             <mat-tab label="Insights"> Insights </mat-tab>
           </mat-tab-group>
     </ng-template>

@@ -54,6 +54,10 @@ export class DetailsComponent implements OnInit , OnDestroy {
   chartChartOptions!: Highcharts.Options
   chartUpdateFlag :boolean = false;
   chartLoaded :boolean = false;
+  bigChartSummaryData: number[] = [];
+  bigChartLoaded :boolean = false;
+  bigChartUpdateFlag :boolean = false;
+  bigChartOptions!: Highcharts.Options
   news: any[] = [];
 
   constructor(private router: Router, private route:ActivatedRoute, 
@@ -164,35 +168,109 @@ export class DetailsComponent implements OnInit , OnDestroy {
 
     this.Highcharts = Highcharts;
 
-    // FIXME, use hourly data instead
-    this.SendAggs(this.ticker).subscribe((data) => {
-      const parsedData: ApiResponse = {
-        resultsCount: data.resultsCount,
-        results: data.results
-      };
-      const results: number[] = parsedData.results.map(result => result.c);
-      this.chartSummaryData = results;
+    this.waitSeconds(10).then(() => {
+      this.SendAggs(this.ticker).subscribe((data) => {
+        const parsedData: ApiResponse = {
+          resultsCount: data.resultsCount,
+          results: data.results
+        };
+        const ohlc = parsedData.results.map(result => [result.v, result.o, result.h, result.l, result.c]);
+        const volumes = parsedData.results.map(result => result.v);
+        // fill the chart options
+        this.bigChartLoaded = true;
+        this.bigChartUpdateFlag = true;
+        this.bigChartOptions = {
 
-      // fill the chart options
-      this.chartLoaded = true;
-      this.chartUpdateFlag = true;
-      this.chartSummaryOptions = {
-        rangeSelector:{
-        enabled: false
-        },
-        title: {
-          text: `${this.ticker} Hourly Price Variation`
-        },
-        series: [{
-          data: this.chartSummaryData,
-          type: 'line',
-          color: 'red',
-          name: this.ticker
-        }],
-        accessibility: {
-          enabled: false // for people with difficulty
+          title: {
+              text: `${this.ticker} Historical`
+          },
+
+          subtitle: {
+              text: `With SMA and Volume by Price technical indicators`,
+          },
+
+          plotOptions:{
+            series:{
+              dataGrouping:{
+                units:[['week', [1]], ['month', [1,2,3,4,6]]]
+              }
+            }
+          },
+          rangeSelector:{
+            selected: 2
+          },
+
+          tooltip:{
+            split:true
+          },
+
+          series: [{
+            type: 'candlestick',
+            name: this.ticker,
+            id: 'aapl',
+            zIndex: 2,
+            data: ohlc
+          }, {
+            type:'column',
+            name: 'Volume',
+            id:'volume',
+            data: volumes,
+            yAxis: 1
+          }, {
+            type:'vbp',
+            linkedTo:'aapl',
+            params:{volumeSeriesID:'volume'},
+            dataLabels:{enabled:false},
+            zoneLines:{enabled:false}
+          }, {
+            type:'sma',
+            linkedTo:'aapl',
+            zIndex:1,
+            marker:{enabled:false}
+          }],
+        };
+      });
+    });
+
+    // FIXME, use hourly data instead
+    this.waitSeconds(10).then(()=>{
+      this.SendAggsHourly(this.ticker).subscribe((data) => {
+        const parsedData: ApiResponse = {
+          resultsCount: data.resultsCount,
+          results: data.results
+        };
+        const results: number[] = parsedData.results.map(result => result.c);
+        this.chartSummaryData = results;
+
+        // fill the chart options
+        this.chartLoaded = true;
+        this.chartUpdateFlag = true;
+        this.chartSummaryOptions = {
+          rangeSelector:{
+          enabled: false
+          },
+          title: {
+            text: `${this.ticker} Hourly Price Variation`
+          },
+          series: [{
+            data: this.chartSummaryData,
+            type: 'line',
+            color: 'red',
+            name: this.ticker
+          }],
+          accessibility: {
+            enabled: false // for people with difficulty
+          }
         }
-      }
+      });
+    });
+  }
+
+  waitSeconds(seconds: number): Promise<void> {
+    return new Promise<void>((resolve) => {
+      setTimeout(() => {
+        resolve();
+      }, seconds*1000);
     });
   }
 
@@ -235,6 +313,17 @@ export class DetailsComponent implements OnInit , OnDestroy {
   SendPeers(symbol:String) {
     symbol = symbol.toUpperCase();
     const api = `https://finnhub.io/api/v1/stock/peers?symbol=${symbol}&token=${this.FINNHUB_API_KEY}`;
+    console.log(`call api: ${api}`);
+    return this.http.get<any>(api);
+  }
+
+  SendAggsHourly(symbol:String) {
+    symbol = symbol.toUpperCase();
+    const NOW: number = Date.now();
+    const SIX_HOURS_IN_MS: number = 6 * 60 * 60 * 1000;
+    const FROM: number = NOW - SIX_HOURS_IN_MS;
+
+    const api = `https://api.polygon.io/v2/aggs/ticker/${symbol}/range/1/hour/${FROM}/${NOW}?adjusted=true&sort=asc&apiKey=${this.POLYGON_API_KEY}`;
     console.log(`call api: ${api}`);
     return this.http.get<any>(api);
   }
