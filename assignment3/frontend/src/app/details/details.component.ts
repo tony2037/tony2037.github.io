@@ -59,6 +59,7 @@ export class DetailsComponent implements OnInit , OnDestroy {
   bigChartLoaded :boolean = false;
   bigChartUpdateFlag :boolean = false;
   bigChartOptions!: Highcharts.Options;
+  recommendationTrendsChartOption!: Highcharts.Options;
   ohlc: any[] = [];
   volumes: number[] = [];
   news: any[] = [];
@@ -68,6 +69,12 @@ export class DetailsComponent implements OnInit , OnDestroy {
   totalChange: number = 0;
   positiveChange: number = 0;
   negativeChange: number = 0;
+  categories: string[] = [];
+  strongBuys: number[] = [];
+  buys: number[] = [];
+  holds: number[] = [];
+  sells: number[] = [];
+  strongSells: number[] = [];
 
   constructor(private router: Router, private route:ActivatedRoute, 
     private http:HttpClient, private modalService: NgbModal,
@@ -126,7 +133,30 @@ export class DetailsComponent implements OnInit , OnDestroy {
 
     this.buildNews(this.ticker);
 
-    this.SendInsiderSentiment(this.ticker).subscribe((data) => {
+    this.buildInsights(this.ticker);
+  }
+
+  ngOnDestroy(): void {
+
+  }
+
+  ngOnInit(): void {
+  }
+
+  successCallback() {
+    this.spinner = false;
+    this.success = true;
+    console.log('success callbcak');
+  }
+
+  failCallback() {
+    this.spinner = false;
+    this.success = false;
+    console.log('fail callbcak');
+  }
+
+  buildInsights(symbol:String) {
+    this.SendInsiderSentiment(symbol).subscribe((data) => {
       interface Element {
         change: number;
         mspr: number;
@@ -156,25 +186,90 @@ export class DetailsComponent implements OnInit , OnDestroy {
       this.totalChange = this.positiveChange + this.negativeChange;
       this.totalMSPR = this.positiveMSPR + this.negativeMSPR;
     });
-  }
 
-  ngOnDestroy(): void {
-
-  }
-
-  ngOnInit(): void {
-  }
-
-  successCallback() {
-    this.spinner = false;
-    this.success = true;
-    console.log('success callbcak');
-  }
-
-  failCallback() {
-    this.spinner = false;
-    this.success = false;
-    console.log('fail callbcak');
+    this.SendRecommendationTrends(symbol).subscribe((data) => {
+      interface Trend {
+        buy: number;
+        hold: number;
+        period: string;
+        sell: number;
+        strongBuy: number;
+        strongSell: number;
+      };
+      data.forEach((trend: Trend) => {
+        this.categories.push(trend.period);
+        this.strongBuys.push(trend.strongBuy);
+        this.buys.push(trend.buy);
+        this.holds.push(trend.hold);
+        this.sells.push(trend.sell);
+        this.strongSells.push(trend.strongSell);
+      });
+      this.recommendationTrendsChartOption = {
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Recommendation Trends',
+            align: 'center'
+        },
+        xAxis: {
+            categories: this.categories
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: '#Analysis'
+            },
+            stackLabels: {
+                enabled: true
+            }
+        },
+        legend: {
+            align: 'left',
+            x: 70,
+            verticalAlign: 'top',
+            y: 70,
+            floating: true,
+            backgroundColor: 'white',
+            borderColor: '#CCC',
+            borderWidth: 1,
+            shadow: false
+        },
+        tooltip: {
+            headerFormat: '<b>{point.x}</b><br/>',
+            pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+        },
+        plotOptions: {
+            column: {
+                stacking: 'normal',
+                dataLabels: {
+                    enabled: true
+                }
+            }
+        },
+        series: [{
+            name: 'Strong Buy',
+            type: 'column',
+            data: this.strongBuys
+          }, {
+              name: 'Buy',
+              type: 'column',
+              data: this.buys
+          }, {
+              name: 'Hold',
+              type: 'column',
+              data: this.holds
+          },{
+            name: 'Sell',
+            type: 'column',
+            data: this.sells
+          },{
+              name: 'Strong Sell',
+              type: 'column',
+              data: this.strongSells
+        }]
+      };
+    });
   }
 
   buildNews(symbol:String) {
@@ -409,6 +504,13 @@ export class DetailsComponent implements OnInit , OnDestroy {
   SendInsiderSentiment(symbol:String) {
     symbol = symbol.toUpperCase();
     const api = `https://finnhub.io/api/v1/stock/insider-sentiment?symbol=${symbol}&from=2022-01-01&token=${this.FINNHUB_API_KEY}`;
+    console.log(`call api: ${api}`);
+    return this.http.get<any>(api);
+  }
+
+  SendRecommendationTrends(symbol:String) {
+    symbol = symbol.toUpperCase();
+    const api = `https://finnhub.io/api/v1/stock/recommendation?symbol=${symbol}&token=${this.FINNHUB_API_KEY}`;
     console.log(`call api: ${api}`);
     return this.http.get<any>(api);
   }
