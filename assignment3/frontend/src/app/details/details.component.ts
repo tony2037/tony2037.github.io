@@ -62,6 +62,12 @@ export class DetailsComponent implements OnInit , OnDestroy {
   ohlc: any[] = [];
   volumes: number[] = [];
   news: any[] = [];
+  totalMSPR: number = 0;
+  positiveMSPR: number = 0;
+  negativeMSPR: number = 0;
+  totalChange: number = 0;
+  positiveChange: number = 0;
+  negativeChange: number = 0;
 
   constructor(private router: Router, private route:ActivatedRoute, 
     private http:HttpClient, private modalService: NgbModal,
@@ -119,6 +125,37 @@ export class DetailsComponent implements OnInit , OnDestroy {
     });
 
     this.buildNews(this.ticker);
+
+    this.SendInsiderSentiment(this.ticker).subscribe((data) => {
+      interface Element {
+        change: number;
+        mspr: number;
+      }
+      this.positiveMSPR = this.negativeMSPR = this.positiveChange = this.negativeChange = 0;
+      data.data.forEach((element: Element) => {
+        const change = element.change;
+        const mspr = element.mspr;
+        if (change > 0) {
+          this.positiveChange += change;
+        }
+        else {
+          this.negativeChange += change;
+        }
+        if (mspr > 0) {
+          this.positiveMSPR += mspr;
+        }
+        else {
+          this.negativeMSPR += mspr;
+        }
+      });
+      this.positiveChange = parseFloat(this.positiveChange.toFixed(2));
+      this.negativeChange = parseFloat(this.negativeChange.toFixed(2));
+      this.positiveMSPR = parseFloat(this.positiveMSPR.toFixed(2));
+      this.negativeMSPR = parseFloat(this.negativeMSPR.toFixed(2));
+
+      this.totalChange = this.positiveChange + this.negativeChange;
+      this.totalMSPR = this.positiveMSPR + this.negativeMSPR;
+    });
   }
 
   ngOnDestroy(): void {
@@ -180,8 +217,6 @@ export class DetailsComponent implements OnInit , OnDestroy {
       this.volumes = parsedData.results.map(result => result.v);
       // fill the chart options
       this.bigChartLoaded = true;
-      console.log(this.ohlc);
-      console.log(this.volumes);
       this.bigChartUpdateFlag = true;
       this.bigChartOptions = {
 
@@ -359,6 +394,7 @@ export class DetailsComponent implements OnInit , OnDestroy {
 
   SendQuote(symbol:String) {
     // FIXME
+    symbol = symbol.toUpperCase();
     const api = `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${this.FINNHUB_API_KEY}`;
     console.log(`call api: ${api}`);
     return this.http.get<any>(api);
@@ -366,7 +402,15 @@ export class DetailsComponent implements OnInit , OnDestroy {
 
   SendProfile2(symbol:String){
     // FIXME
+    symbol = symbol.toUpperCase();
     return this.http.get<any>(`https://finnhub.io/api/v1/stock/profile2?symbol=${symbol}&token=${this.FINNHUB_API_KEY}`);
+  }
+
+  SendInsiderSentiment(symbol:String) {
+    symbol = symbol.toUpperCase();
+    const api = `https://finnhub.io/api/v1/stock/insider-sentiment?symbol=${symbol}&from=2022-01-01&token=${this.FINNHUB_API_KEY}`;
+    console.log(`call api: ${api}`);
+    return this.http.get<any>(api);
   }
 
   buyit(quantity: string, curPrice: number) {

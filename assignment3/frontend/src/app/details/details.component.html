@@ -150,7 +150,43 @@
                     </div>
                 </ng-template>
             </mat-tab>
-            <mat-tab label="Insights"> Insights </mat-tab>
+            <mat-tab label="Insights">
+                <div class="container">
+                    <h2 style="text-align: center; color: gray;">Insider Sentiments</h2>
+                    <div class="row">
+                        <div class="col"></div>
+                        <div class="col-6">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">{{companyName}}</th>
+                                        <th scope="col">MSPR</th>
+                                        <th scope="col">Change</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th scope="row">Total</th>
+                                        <td>{{totalMSPR}}</td>
+                                        <td>{{totalChange}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Positive</th>
+                                        <td>{{positiveMSPR}}</td>
+                                        <td>{{positiveChange}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Negative</th>
+                                        <td>{{negativeMSPR}}</td>
+                                        <td>{{negativeChange}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col"></div>
+                    </div>
+                </div>
+            </mat-tab>
           </mat-tab-group>
     </ng-template>
 </div>
