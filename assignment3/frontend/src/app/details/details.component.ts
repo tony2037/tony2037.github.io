@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnDestroy, OnInit, TemplateRef, numberAttribute } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
@@ -60,6 +60,7 @@ export class DetailsComponent implements OnInit , OnDestroy {
   bigChartUpdateFlag :boolean = false;
   bigChartOptions!: Highcharts.Options;
   recommendationTrendsChartOption!: Highcharts.Options;
+  historicalEPSChartOption!: Highcharts.Options;
   ohlc: any[] = [];
   volumes: number[] = [];
   news: any[] = [];
@@ -75,6 +76,7 @@ export class DetailsComponent implements OnInit , OnDestroy {
   holds: number[] = [];
   sells: number[] = [];
   strongSells: number[] = [];
+  seriesData = [];
 
   constructor(private router: Router, private route:ActivatedRoute, 
     private http:HttpClient, private modalService: NgbModal,
@@ -268,6 +270,49 @@ export class DetailsComponent implements OnInit , OnDestroy {
               type: 'column',
               data: this.strongSells
         }]
+      };
+    });
+
+    this.SendHistoricalEPS(symbol).subscribe((data) => {
+      interface Entry {
+        date: string;
+        epsActual: number;
+        epsEstimate: number;
+        hour: string;
+        quarter: number;
+        revenueActual: number;
+        revenueEstimate: number;
+        symbol: string;
+        year: number;
+      };
+      console.log(data);
+      this.seriesData = data.earningsCalendar.map((entry: Entry) => ({
+        name: `Q${entry.quarter} ${entry.year}`,
+        x: Date.parse(entry.date),
+        y: entry.epsActual - entry.epsEstimate
+      }));
+
+      console.log(this.seriesData);
+
+      this.historicalEPSChartOption = {
+        chart: {
+          type: 'line'
+        },
+        title: {
+          text: 'Quarterly EPS Surprise'
+        },
+        xAxis: {
+          type: 'datetime',
+          title: {
+            text: 'Date'
+          }
+        },
+        yAxis: {
+          title: {
+            text: 'EPS Surprise'
+          }
+        },
+        series: this.seriesData,
       };
     });
   }
@@ -504,6 +549,19 @@ export class DetailsComponent implements OnInit , OnDestroy {
   SendInsiderSentiment(symbol:String) {
     symbol = symbol.toUpperCase();
     const api = `https://finnhub.io/api/v1/stock/insider-sentiment?symbol=${symbol}&from=2022-01-01&token=${this.FINNHUB_API_KEY}`;
+    console.log(`call api: ${api}`);
+    return this.http.get<any>(api);
+  }
+
+  SendHistoricalEPS(symbol:String) {
+    symbol = symbol.toUpperCase();
+    let TODAY = new Date();
+    TODAY = new Date(TODAY.getFullYear() - 1, TODAY.getMonth(), TODAY.getDate() - 1);
+    const FROM = new Date(TODAY.getFullYear() - 1, TODAY.getMonth(), TODAY.getDate() - 1);
+    const TO = TODAY;
+    const FROM_STRING = this.formatDate(FROM);
+    const TO_STRING = this.formatDate(TO);
+    const api = `https://finnhub.io/api/v1/calendar/earnings?from=${FROM_STRING}&to=${TO_STRING}&symbol=${symbol}&token=${this.FINNHUB_API_KEY}`;
     console.log(`call api: ${api}`);
     return this.http.get<any>(api);
   }
