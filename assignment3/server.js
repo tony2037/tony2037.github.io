@@ -7,17 +7,18 @@ const { MongoClient, ServerApiVersion } = require('mongodb');
 
 const FINNHUB_API_KEY = 'REDACTED_FINNHUB_KEY';
 
+const { dbPassword } = require('./password');
+const uri = `mongodb+srv://ztex030640417:${dbPassword}@cluster0.zpk5y5w.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 const dbName = 'Assigntment3DB';
 const collectionWatchlist = 'watchlist';
-async function run() {
-    fs.readFile('.password', 'utf-8', (err, password) => {
-        if (err) {
-          console.error(err);
-          return;
-        }
-        console.log(password);
-        const uri = `mongodb+srv://ztex030640417:${password}@cluster0.zpk5y5w.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
-        console.log(uri);
+
+app.use(cors());
+app.use(express.json());
+
+// Route: /api/watchlist_drop
+app.get('/api/watchlist_drop', async (req, res) => {
+    let client;
+    try {
         client = new MongoClient(uri, {
             serverApi: {
                 version: '1',
@@ -25,22 +26,8 @@ async function run() {
                 deprecationErrors: true,
             }
         });
-        // Connect the client to the server	(optional starting in v4.7)
         client.connect();
-        // Send a ping to confirm a successful connection
         client.db("admin").command({ ping: 1 });
-        console.log("Pinged your deployment. You successfully connected to MongoDB!");
-    });
-}
-
-run().catch(console.error);
-
-app.use(cors());
-app.use(express.json());
-
-// Route: /api/watchlist_drop
-app.get('/api/watchlist_drop', async (req, res) => {
-    try {
         const db = client.db(dbName);
         const result = await db.dropCollection(collectionWatchlist);
         res.json(result);
@@ -52,8 +39,19 @@ app.get('/api/watchlist_drop', async (req, res) => {
 
 // Route: /api/watchlist_del?ticker=AAPL
 app.get('/api/watchlist_del', async (req, res) => {
+    let client;
     try {
         const ticker = req.query.ticker.toUpperCase();
+
+        client = new MongoClient(uri, {
+            serverApi: {
+                version: '1',
+                strict: true,
+                deprecationErrors: true,
+            }
+        });
+        client.connect();
+        client.db("admin").command({ ping: 1 });
         const db = client.db(dbName);
         const collection = db.collection(collectionWatchlist);
         const result = await collection.updateOne({}, { $pull: { watchlist: ticker } });
@@ -72,8 +70,19 @@ app.get('/api/watchlist_del', async (req, res) => {
 
 // Route: /api/watchlist_add?ticker=AAPL
 app.get('/api/watchlist_add', async (req, res) => {
+    let client;
     try {
         const ticker = req.query.ticker.toUpperCase();
+
+        client = new MongoClient(uri, {
+            serverApi: {
+                version: '1',
+                strict: true,
+                deprecationErrors: true,
+            }
+        });
+        client.connect();
+        client.db("admin").command({ ping: 1 });
         const db = client.db(dbName);
         const collection = db.collection(collectionWatchlist);
         await db.createCollection(collectionWatchlist);
