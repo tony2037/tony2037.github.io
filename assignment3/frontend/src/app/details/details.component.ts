@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, TemplateRef, numberAttribute } from '@angular/core';
+import { Component, OnDestroy, OnInit, TemplateRef, ViewChild, numberAttribute } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
@@ -77,6 +77,8 @@ export class DetailsComponent implements OnInit , OnDestroy {
   sells: number[] = [];
   strongSells: number[] = [];
   seriesData = [];
+
+  @ViewChild('num') num: any;
 
   constructor(private router: Router, private route:ActivatedRoute, 
     private http:HttpClient, private modalService: NgbModal,
@@ -285,14 +287,11 @@ export class DetailsComponent implements OnInit , OnDestroy {
         symbol: string;
         year: number;
       };
-      console.log(data);
       this.seriesData = data.earningsCalendar.map((entry: Entry) => ({
         name: `Q${entry.quarter} ${entry.year}`,
         x: Date.parse(entry.date),
         y: entry.epsActual - entry.epsEstimate
       }));
-
-      console.log(this.seriesData);
 
       this.historicalEPSChartOption = {
         chart: {
@@ -573,13 +572,15 @@ export class DetailsComponent implements OnInit , OnDestroy {
     return this.http.get<any>(api);
   }
 
-  BuyStock(ticker: string, price: number, quantity: number) {
-    const payload = { ticker, price, quantity };
+  BuyStock(ticker: string, price: number, quantity: string) {
+    const payload = { ticker, price,quantity };
+    console.log(`buystock ${payload}`);
     return this.http.post<any>(`/api/portfolio/buy`, payload);
   }
 
-  SellStock(ticker: string, price: number, quantity: number) {
+  SellStock(ticker: string, price: number, quantity: string) {
     const payload = { ticker, price, quantity };
+    console.log(`sellstock ${payload}`);
     return this.http.post<any>(`/api/portfolio/sell`, payload);
   }
 
