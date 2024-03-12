@@ -37,6 +37,45 @@ app.get('/api/watchlist_drop', async (req, res) => {
     }
 });
 
+// Route: /api/watchlist_get
+app.get('/api/watchlist_get', async (req, res) => {
+    let client;
+    try {
+        client = new MongoClient(uri, {
+            serverApi: {
+                version: '1',
+                strict: true,
+                deprecationErrors: true,
+            }
+        });
+        await client.connect();
+        await client.db("admin").command({ ping: 1 });
+        const db = client.db(dbName);
+
+        const collectionExists = await db.listCollections({ name: collectionWatchlist }).hasNext();
+        if (!collectionExists) {
+            return res.json([]);
+        }
+
+        const collection = db.collection(collectionWatchlist);
+        const result = await collection.findOne({});
+
+        if (!result || !result.watchlist) {
+            return res.json([]);
+        }
+
+        res.json(result.watchlist);
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'An error occurred while fetching data.' });
+    } finally {
+        if (client) {
+            await client.close();
+        }
+    }
+});
+
+
 // Route: /api/watchlist_del?ticker=AAPL
 app.get('/api/watchlist_del', async (req, res) => {
     let client;
