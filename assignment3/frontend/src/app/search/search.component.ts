@@ -49,8 +49,8 @@ export class SearchComponent implements OnInit {
   }
 
   searchStockOptions(query: string): void {
-    // FIXME: make the request to /api/autocomplete?query=${query}
-    this.http.get<AutocompleteOptions>(`https://finnhub.io/api/v1/search?q=${query}&token=REDACTED_FINNHUB_KEY`)
+    query = query.toUpperCase();
+    this.http.get<AutocompleteOptions>(`/api/autocomplete?query=${query}`)
       .subscribe(options => {
         this.filteredOptions = [];
         let count = options.count;
