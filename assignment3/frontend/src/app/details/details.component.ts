@@ -573,18 +573,14 @@ export class DetailsComponent implements OnInit , OnDestroy {
     return this.http.get<any>(api);
   }
 
-  buyit(quantity: string, curPrice: number) {
-    if(quantity == ''){
-      quantity = '0';
-    }
-    quantity = quantity.match(/\d+/g)?.join('') || '0';
-    this.stockCartQuantity = parseInt(quantity, 10);
-    this.stockCartValue = parseFloat((this.stockCartQuantity * curPrice).toFixed(2));
-    console.log(`bug ${this.stockCartQuantity} x ${curPrice}  = ${this.stockCartValue}`);
+  BuyStock(ticker: string, price: number, quantity: number) {
+    const payload = { ticker, price, quantity };
+    return this.http.post<any>(`/api/portfolio/buy`, payload);
   }
 
-  sellit() {
-
+  SellStock(ticker: string, price: number, quantity: number) {
+    const payload = { ticker, price, quantity };
+    return this.http.post<any>(`/api/portfolio/sell`, payload);
   }
 
   openModal(content: TemplateRef<any>) {

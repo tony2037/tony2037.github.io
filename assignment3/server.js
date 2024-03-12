@@ -11,9 +11,158 @@ const { dbPassword } = require('./password');
 const uri = `mongodb+srv://ztex030640417:${dbPassword}@cluster0.zpk5y5w.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 const dbName = 'Assigntment3DB';
 const collectionWatchlist = 'watchlist';
+const collectionPortfolio = 'portfolio';
 
 app.use(cors());
 app.use(express.json());
+
+app.get('/api/portfolio/get', async (req, res) => {
+    let client;
+    try {
+        client = new MongoClient(uri, {
+            serverApi: {
+                version: '1',
+                strict: true,
+                deprecationErrors: true,
+            }
+        });
+        await client.connect();
+        const db = client.db(dbName);
+        const collection = db.collection(collectionPortfolio);
+        const result = await collection.findOne({});
+        res.json(result);
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'An error occurred while fetching data.' });
+    } finally {
+        if (client) {
+            await client.close();
+        }
+    }
+});
+
+
+app.post('/api/portfolio/init', async (req, res) => {
+    try {
+        const cash = req.body.cash;
+        client = new MongoClient(uri, {
+            serverApi: {
+                version: '1',
+                strict: true,
+                deprecationErrors: true,
+            }
+        });
+        client.connect();
+        client.db("admin").command({ ping: 1 });
+        const db = client.db(dbName);
+        const collection = db.collection(collectionPortfolio);
+
+        // Check if portfolio document already exists
+        const existingPortfolio = await collection.findOne({});
+        if (existingPortfolio) {
+            // Update cash in existing portfolio
+            await collection.updateOne({}, { $set: { cash: cash, stocks: {} } });
+            res.status(200).send('Portfolio cash updated successfully.');
+        } else {
+            // Create new portfolio document
+            await collection.insertOne({ cash: cash, stocks: {} });
+            res.status(200).send('Portfolio initialized successfully.');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'An error occurred while initializing portfolio.' });
+    } finally {
+        if (client) {
+            await client.close();
+        }
+    }
+});
+
+app.post('/api/portfolio/buy', async (req, res) => {
+    try {
+        const { ticker, price, quantity } = req.body;
+        const cost = price * quantity;
+
+        client = new MongoClient(uri, {
+            serverApi: {
+                version: '1',
+                strict: true,
+                deprecationErrors: true,
+            }
+        });
+        client.connect();
+        client.db("admin").command({ ping: 1 });
+        const db = client.db(dbName);
+        const collection = db.collection(collectionPortfolio);
+
+        const result = await collection.findOne({});
+        if (!result) {
+            await collection.insertOne({
+                cash: 2000000,
+                stocks: {}
+            });
+        }
+
+        const updateResult = await collection.updateOne({}, {
+            $inc: {
+                cash: -cost,
+                [`stocks.${ticker}.total`]: cost,
+                [`stocks.${ticker}.quantity`]: quantity
+            }
+        });
+
+        res.json({ message: 'Stock bought successfully.' });
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'An error occurred while buying stock.' });
+    } finally {
+        if (client) {
+            await client.close();
+        }
+    }
+});
+
+app.post('/api/portfolio/sell', async (req, res) => {
+    try {
+        const { ticker, price, quantity } = req.body;
+        const income = price * quantity;
+
+        client = new MongoClient(uri, {
+            serverApi: {
+                version: '1',
+                strict: true,
+                deprecationErrors: true,
+            }
+        });
+        client.connect();
+        client.db("admin").command({ ping: 1 });
+        const db = client.db(dbName);
+        const collection = db.collection(collectionPortfolio);
+
+        const result = await collection.findOne({});
+
+        if (!result || !result.stocks || !result.stocks[ticker] || result.stocks[ticker].quantity < quantity) {
+            return res.status(400).json({ error: 'Insufficient stocks to sell.' });
+        }
+
+        const updateResult = await collection.updateOne({}, {
+            $inc: {
+                cash: income,
+                [`stocks.${ticker}.total`]: -income,
+                [`stocks.${ticker}.quantity`]: -quantity
+            }
+        });
+
+        res.json({ message: 'Stock sold successfully.' });
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'An error occurred while selling stock.' });
+    } finally {
+        if (client) {
+            await client.close();
+        }
+    }
+});
 
 // Route: /api/watchlist_drop
 app.get('/api/watchlist_drop', async (req, res) => {
@@ -29,7 +178,8 @@ app.get('/api/watchlist_drop', async (req, res) => {
         client.connect();
         client.db("admin").command({ ping: 1 });
         const db = client.db(dbName);
-        const result = await db.dropCollection(collectionWatchlist);
+        const collection = db.collection(collectionWatchlist);
+        const result = await collection.deleteMany({});
         res.json(result);
     } catch (error) {
         console.error('Error:', error);

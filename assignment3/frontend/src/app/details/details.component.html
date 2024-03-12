@@ -31,10 +31,10 @@
                     </div>
                     <div class="modal-footer">
                         <div class="mr-auto">Total: {{ stockCartValue }}</div>
-                        <div><button (click)="buyit(num.value, lastPrice)" type="button" [disabled]="num.value === '0' || num.value === ''" class="btn btn-success">Buy</button></div>
+                        <div><button (click)="BuyStock(num.value, lastPrice)" type="button" [disabled]="num.value === '0' || num.value === ''" class="btn btn-success">Buy</button></div>
                     </div>
                 </ng-template>
-                <button (click)="sellit()" type="button" class="btn btn-danger">Sell</button>
+                <button (click)="SellStock()" type="button" class="btn btn-danger">Sell</button>
             </div>
             <div class="col-4"><img [src]="logoUrl" alt="Company Logo"></div>
             <div class="col-4">
