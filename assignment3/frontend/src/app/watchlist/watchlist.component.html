@@ -1,1 +1,18 @@
-<p>watchlist works!</p>
+<div class="container">
+    <div class="row">
+        <h1>My Watchlist</h1>
+    </div>
+    <div class="row">
+        <div *ngFor="let stock of watched_stocks" class="col-8">
+            <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">{{ stock.ticker }}</h5>
+                  <h6 class="card-subtitle mb-2 text-muted">{{ stock.companyName }}</h6>
+                  <p class="card-text">{{ stock.price }}</p>
+                  <p class="card-text">{{ stock.change }}</p>
+                  <p class="card-text">{{ stock.changePercentage }} %</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
 import { ModalDismissReasons, NgbDatepickerModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ApiService } from '../api.service';
 
 import * as Highcharts from 'highcharts/highstock';
 import IndicatorsCore from 'highcharts/indicators/indicators';
@@ -82,7 +83,7 @@ export class DetailsComponent implements OnInit , OnDestroy {
 
   constructor(private router: Router, private route:ActivatedRoute, 
     private http:HttpClient, private modalService: NgbModal,
-    private datePipe: DatePipe) {
+    private datePipe: DatePipe, private apiService: ApiService) {
     this.ticker = this.route.snapshot.paramMap.get('ticker');
     if (!this.ticker) {
       this.failCallback();
@@ -91,7 +92,7 @@ export class DetailsComponent implements OnInit , OnDestroy {
 
     this.buildHighcharts();
 
-    this.SendProfile2(this.ticker).subscribe((data) => {
+    this.apiService.SendProfile2(this.ticker).subscribe((data) => {
       const keys = Object.keys(data);
       if (keys.length == 0) {
         this.failCallback();
@@ -107,7 +108,7 @@ export class DetailsComponent implements OnInit , OnDestroy {
       }
     });
 
-    this.SendQuote(this.ticker).subscribe((data) => {
+    this.apiService.SendQuote(this.ticker).subscribe((data) => {
       const keys = Object.keys(data);
       if (keys.length == 0) {
         this.failCallback();
@@ -529,20 +530,6 @@ export class DetailsComponent implements OnInit , OnDestroy {
     const api = `https://api.polygon.io/v2/aggs/ticker/${symbol}/range/1/day/${FROM_STRING}/${TO_STRING}?adjusted=true&sort=asc&apiKey=${this.POLYGON_API_KEY}`;
     console.log(`call api: ${api}`);
     return this.http.get<any>(api);
-  }
-
-  SendQuote(symbol:String) {
-    // FIXME
-    symbol = symbol.toUpperCase();
-    const api = `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${this.FINNHUB_API_KEY}`;
-    console.log(`call api: ${api}`);
-    return this.http.get<any>(api);
-  }
-
-  SendProfile2(symbol:String){
-    // FIXME
-    symbol = symbol.toUpperCase();
-    return this.http.get<any>(`https://finnhub.io/api/v1/stock/profile2?symbol=${symbol}&token=${this.FINNHUB_API_KEY}`);
   }
 
   SendInsiderSentiment(symbol:String) {
