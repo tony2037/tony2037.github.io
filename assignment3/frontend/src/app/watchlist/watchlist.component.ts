@@ -29,7 +29,7 @@ export class WatchlistComponent implements OnInit , OnDestroy {
     private datePipe: DatePipe, private apiService: ApiService) {
       this.spinner = true;
       this.BuildCards();
-    }
+  }
 
   ngOnInit(): void {
       
