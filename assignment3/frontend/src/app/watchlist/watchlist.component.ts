@@ -21,11 +21,13 @@ interface StockCard {
 })
 export class WatchlistComponent implements OnInit , OnDestroy {
 
+  spinner :boolean = true;
   watched_stocks: StockCard[] = [];
 
   constructor(private router: Router, private route:ActivatedRoute, 
     private http:HttpClient, private modalService: NgbModal,
     private datePipe: DatePipe, private apiService: ApiService) {
+      this.spinner = true;
       this.BuildCards();
     }
 
@@ -58,8 +60,12 @@ export class WatchlistComponent implements OnInit , OnDestroy {
         );
       });
       forkJoin(observables).subscribe(() => {
-        
+        this.spinner = false;
       });
     });
+  }
+
+  onClickCard(ticker:String) {
+    this.router.navigate(['/search', ticker]);
   }
 }

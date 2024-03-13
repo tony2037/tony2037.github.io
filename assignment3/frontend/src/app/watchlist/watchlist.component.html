@@ -1,18 +1,25 @@
 <div class="container">
-    <div class="row">
-        <h1>My Watchlist</h1>
+    <div class="row"><h1>My Watchlist</h1></div>
+    <div *ngIf="spinner == true">
+        <mat-spinner diameter="30"></mat-spinner>
     </div>
-    <div class="row">
-        <div *ngFor="let stock of watched_stocks" class="col-8">
-            <div class="card">
-                <div class="card-body">
-                  <h5 class="card-title">{{ stock.ticker }}</h5>
-                  <h6 class="card-subtitle mb-2 text-muted">{{ stock.companyName }}</h6>
-                  <p class="card-text">{{ stock.price }}</p>
-                  <p class="card-text">{{ stock.change }}</p>
-                  <p class="card-text">{{ stock.changePercentage }} %</p>
+    <div *ngIf="spinner == false">
+    <div *ngIf="watched_stocks.length === 0; else result_block" class="alert alert-warning" role="alert">
+        Currently you don't have any stock in your watchlist.
+    </div>
+    <ng-template #result_block>
+        <div class="row">
+            <div *ngFor="let stock of watched_stocks" class="col-8">
+                <div (click)="onClickCard(stock.ticker)" class="card">
+                    <div class="card-body">
+                      <h5 class="card-title">{{ stock.ticker }}</h5>
+                      <h6 class="card-subtitle mb-2 text-muted">{{ stock.companyName }}</h6>
+                      <p class="card-text">{{ stock.price }}</p>
+                      <p class="card-text">{{ stock.change }}</p>
+                      <p class="card-text">{{ stock.changePercentage }} %</p>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </ng-template>
 </div>
