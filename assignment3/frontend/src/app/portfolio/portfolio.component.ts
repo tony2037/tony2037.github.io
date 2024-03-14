@@ -8,9 +8,14 @@ import { forkJoin, tap } from 'rxjs';
 import { tick } from '@angular/core/testing';
 
 interface Stock {
+  company_name: string;
   ticker: string;
   total: number;
   quantity: number;
+  avg_cost: number;
+  change: number;
+  current_price: number;
+  market_value: number;
 };
 
 @Component({
@@ -40,14 +45,39 @@ export class PortfolioComponent implements OnInit , OnDestroy {
   BuildPortfolio() {
     this.apiService.SendPortfolioGet().subscribe((data) => {
       this.cash = data.cash;
+  
+      const observables = [];
       for (const ticker in data.stocks) {
-        let stock = data.stocks[ticker];
-        this.stocks.push({
-          ticker: ticker,
-          total: stock.total,
-          quantity: stock.quantity
-        });
+        const stock = data.stocks[ticker];
+        const quoteObservable = this.apiService.SendQuote(ticker);
+        const profileObservable = this.apiService.SendProfile2(ticker);
+        
+        observables.push(forkJoin([quoteObservable, profileObservable]).pipe(
+          tap(([quoteData, profileData]) => {
+            const company_name = profileData.name;
+            const total = stock.total;
+            const quantity = stock.quantity;
+            const avg_cost = parseFloat((total / quantity).toFixed(2));
+            const change = quoteData.d;
+            const current_price = quoteData.c;
+            const market_value = parseFloat((current_price * quantity).toFixed(2));
+  
+            this.stocks.push({
+              company_name: company_name,
+              ticker: ticker,
+              total: total,
+              quantity: quantity,
+              avg_cost: avg_cost,
+              change: change,
+              current_price: current_price,
+              market_value: market_value
+            });
+          })
+        ));
       }
+  
+      forkJoin(observables).subscribe(() => {
+      });
     });
   }
 }

@@ -5,11 +5,21 @@
         <div *ngFor="let stock of stocks" class="col-8">
             <div class="card">
                 <div class="card-header">
-                    <span><b>{{ stock.ticker }}</b> {{ stock.ticker }}</span>
+                    <span><b>{{ stock.ticker }}</b> {{ stock.company_name }}</span>
                 </div>
                 <div class="card-body">
-                  <h5 class="card-title">Special title treatment</h5>
-                  <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                    <div class="row">
+                        <div class="col-6"><p class="card-text">Quantity: {{ stock.quantity }}</p></div>
+                        <div class="col-6"><p class="card-text">Change: {{ stock.change }}</p></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6"><p class="card-text">Avg. Cost / Share: {{ stock.avg_cost }}</p></div>
+                        <div class="col-6"><p class="card-text">Current Price: {{ stock.current_price }}</p></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6"><p class="card-text">Total Cost: {{ stock.total }}</p></div>
+                        <div class="col-6"><p class="card-text">Market Value: {{ stock.market_value }}</p></div>
+                    </div>
                 </div>
                 <div class="card-footer">
                     <a href="#" class="btn btn-primary">Buy</a>
