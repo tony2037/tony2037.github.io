@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit, TemplateRef, ViewChild, ChangeDetectorRef
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
-import { ModalDismissReasons, NgbDatepickerModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ModalDismissReasons, NgbDatepickerModule, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ApiService } from '../api.service';
 
 import * as Highcharts from 'highcharts/highstock';
@@ -560,19 +560,24 @@ export class DetailsComponent implements OnInit , OnDestroy {
     return this.http.get<any>(api);
   }
 
+  showCash() :string {
+    return this.cash.toFixed(2);
+  }
+
   canBuy(price: number, quantity: string) {
     const q = parseInt(quantity);
     const total_price = price * q;
     return total_price <= this.cash;
   }
 
-  BuyStock(ticker: string, price: number, quantity: string) {
+  BuyStock(ticker: string, price: number, quantity: string, modal: NgbModalRef) {
     const q = parseInt(quantity);
     const total_price = price * q;
     if (this.canBuy(price, quantity)) {
       this.apiService.SendPortfolioBuy(ticker, price, quantity).subscribe();
       this.cash -= total_price;
       this.quantity += q;
+      modal.close();
     }
   }
 
@@ -581,13 +586,14 @@ export class DetailsComponent implements OnInit , OnDestroy {
     return q <= this.quantity;
   }
 
-  SellStock(ticker: string, price: number, quantity: string) {
+  SellStock(ticker: string, price: number, quantity: string, modal: NgbModalRef) {
     const q = parseInt(quantity);
     const total_price = price * q;
     if (this.canSell(quantity)) {
       this.apiService.SendPortfolioSell(ticker, price, quantity).subscribe();
       this.quantity -= q;
       this.cash += total_price;
+      modal.close();
     }
   }
 
