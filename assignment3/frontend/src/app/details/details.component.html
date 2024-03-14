@@ -9,9 +9,13 @@
     <ng-template #result_block>
         <div class="row">
             <div class="col-4">
-                <span><b> {{ticker}} </b></span>
-                <span> {{companyName}} </span>
-                <span> {{exchangeCode}} </span>
+                <span><b> {{ ticker }} </b></span>
+                <button (click)="onClickWatchlist()" *ngIf="isWatched == true; else nowatch" style="background-color: transparent; border-style: none;"><svg width="30" height="30" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="yellow"/></svg></button>
+                <ng-template #nowatch>
+                    <button (click)="onClickWatchlist()" style="background-color: transparent; border-style: none;"><svg #nowatch_star width="30" height="30" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="none" stroke="yellow"/></svg></button>
+                </ng-template>
+                <span> {{ companyName }} </span>
+                <span> {{ exchangeCode }} </span>
                 <button (click)="openModal(buyContent)" type="button" class="btn btn-success">Buy</button>
                 <ng-template #buyContent let-modal>
                     <div class="modal-header" style="display: block;">

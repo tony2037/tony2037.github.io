@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, TemplateRef, ViewChild, numberAttribute } from '@angular/core';
+import { Component, OnDestroy, OnInit, TemplateRef, ViewChild, ChangeDetectorRef, numberAttribute } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
@@ -76,14 +76,17 @@ export class DetailsComponent implements OnInit , OnDestroy {
   buys: number[] = [];
   holds: number[] = [];
   sells: number[] = [];
-  strongSells: number[] = [];
+  strongSells :number[] = [];
   seriesData = [];
+  watchlist :string[] = [];
+  isWatched :boolean = false;
 
   @ViewChild('num') num: any;
 
   constructor(private router: Router, private route:ActivatedRoute, 
     private http:HttpClient, private modalService: NgbModal,
-    private datePipe: DatePipe, private apiService: ApiService) {
+    private datePipe: DatePipe, private apiService: ApiService,
+    private cdr: ChangeDetectorRef) {
     this.ticker = this.route.snapshot.paramMap.get('ticker');
     if (!this.ticker) {
       this.failCallback();
@@ -132,13 +135,15 @@ export class DetailsComponent implements OnInit , OnDestroy {
       }
     });
 
-    this.SendPeers(this.ticker).subscribe((data) => {
+    this.apiService.SendPeers(this.ticker).subscribe((data) => {
       this.peers = data;
     });
 
     this.buildNews(this.ticker);
 
     this.buildInsights(this.ticker);
+
+    this.buildWatchList();
   }
 
   ngOnDestroy(): void {
@@ -160,8 +165,39 @@ export class DetailsComponent implements OnInit , OnDestroy {
     console.log('fail callbcak');
   }
 
+  buildWatchList() {
+    this.apiService.SendWatchlistGet().subscribe((data) => {
+      data.forEach((ticker: string) => {
+        this.watchlist.push(ticker.toUpperCase());
+      });
+      this.isWatched = this.inWatchlist(this.ticker);
+    });
+  }
+
+  inWatchlist(ticker: string) :boolean {
+    for (let i = 0; i < this.watchlist.length; i++) {
+      if (ticker == this.watchlist[i]) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  onClickWatchlist() {
+    if (this.isWatched) {
+      // remove from the watchlist
+      this.apiService.SendWatchlistDel(this.ticker).subscribe();
+    }
+    else {
+      // add into watchlist
+      this.apiService.SendWatchlistAdd(this.ticker).subscribe();
+    }
+    this.isWatched = !this.isWatched;
+    this.cdr.detectChanges();
+  }
+
   buildInsights(symbol:String) {
-    this.SendInsiderSentiment(symbol).subscribe((data) => {
+    this.apiService.SendInsiderSentiment(symbol).subscribe((data) => {
       interface Element {
         change: number;
         mspr: number;
@@ -192,7 +228,7 @@ export class DetailsComponent implements OnInit , OnDestroy {
       this.totalMSPR = this.positiveMSPR + this.negativeMSPR;
     });
 
-    this.SendRecommendationTrends(symbol).subscribe((data) => {
+    this.apiService.SendRecommendationTrends(symbol).subscribe((data) => {
       interface Trend {
         buy: number;
         hold: number;
@@ -276,7 +312,7 @@ export class DetailsComponent implements OnInit , OnDestroy {
       };
     });
 
-    this.SendHistoricalEPS(symbol).subscribe((data) => {
+    this.apiService.SendHistoricalEPS(symbol).subscribe((data) => {
       interface Entry {
         date: string;
         epsActual: number;
@@ -318,7 +354,7 @@ export class DetailsComponent implements OnInit , OnDestroy {
   }
 
   buildNews(symbol:String) {
-    this.SendNews(symbol).subscribe((data) => {
+    this.apiService.SendNews(symbol).subscribe((data) => {
       let n = data.length;
       let count = 0;
       for (let i = 0; i < n && count < 8; i++) {
@@ -490,25 +526,6 @@ export class DetailsComponent implements OnInit , OnDestroy {
     return `${year}-${month}-${day}`;
   }
 
-  SendNews(symbol:String) {
-    // FIXME: change api endpoint and check if we we front 30 days ago
-    symbol = symbol.toUpperCase();
-    const today = new Date();
-    const from = new Date();
-    from.setDate(from.getDate() - 30);
-    const FROM: string = this.formatDate(from);
-    const TO: string = this.formatDate(today);
-    const api = `https://finnhub.io/api/v1/company-news?symbol=${symbol}&from=${FROM}&to=${TO}&token=${this.FINNHUB_API_KEY}`;
-    return this.http.get<any>(api);
-  }
-
-  SendPeers(symbol:String) {
-    symbol = symbol.toUpperCase();
-    const api = `https://finnhub.io/api/v1/stock/peers?symbol=${symbol}&token=${this.FINNHUB_API_KEY}`;
-    console.log(`call api: ${api}`);
-    return this.http.get<any>(api);
-  }
-
   SendAggsHourly(symbol:String) {
     symbol = symbol.toUpperCase();
     const NOW: number = Date.now();
@@ -528,33 +545,6 @@ export class DetailsComponent implements OnInit , OnDestroy {
     const FROM_STRING = this.formatDate(FROM);
     const TO_STRING = this.formatDate(TO);
     const api = `https://api.polygon.io/v2/aggs/ticker/${symbol}/range/1/day/${FROM_STRING}/${TO_STRING}?adjusted=true&sort=asc&apiKey=${this.POLYGON_API_KEY}`;
-    console.log(`call api: ${api}`);
-    return this.http.get<any>(api);
-  }
-
-  SendInsiderSentiment(symbol:String) {
-    symbol = symbol.toUpperCase();
-    const api = `https://finnhub.io/api/v1/stock/insider-sentiment?symbol=${symbol}&from=2022-01-01&token=${this.FINNHUB_API_KEY}`;
-    console.log(`call api: ${api}`);
-    return this.http.get<any>(api);
-  }
-
-  SendHistoricalEPS(symbol:String) {
-    symbol = symbol.toUpperCase();
-    let TODAY = new Date();
-    TODAY = new Date(TODAY.getFullYear() - 1, TODAY.getMonth(), TODAY.getDate() - 1);
-    const FROM = new Date(TODAY.getFullYear() - 1, TODAY.getMonth(), TODAY.getDate() - 1);
-    const TO = TODAY;
-    const FROM_STRING = this.formatDate(FROM);
-    const TO_STRING = this.formatDate(TO);
-    const api = `https://finnhub.io/api/v1/calendar/earnings?from=${FROM_STRING}&to=${TO_STRING}&symbol=${symbol}&token=${this.FINNHUB_API_KEY}`;
-    console.log(`call api: ${api}`);
-    return this.http.get<any>(api);
-  }
-
-  SendRecommendationTrends(symbol:String) {
-    symbol = symbol.toUpperCase();
-    const api = `https://finnhub.io/api/v1/stock/recommendation?symbol=${symbol}&token=${this.FINNHUB_API_KEY}`;
     console.log(`call api: ${api}`);
     return this.http.get<any>(api);
   }
