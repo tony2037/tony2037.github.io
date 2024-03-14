@@ -101,4 +101,16 @@ export class ApiService {
     const api = `https://csci-571-assignment3-416903.uw.r.appspot.com/api/portfolio/get`;
     return this.http.get<any>(api);
   }
+
+  SendPortfolioBuy(ticker: string, price: number, quantity: string) {
+    const q = parseInt(quantity);
+    const payload = { 'ticker': ticker, 'price': price, 'quantity': q };
+    return this.http.post<any>(`https://csci-571-assignment3-416903.uw.r.appspot.com/api/portfolio/buy`, payload);
+  }
+
+  SendPortfolioSell(ticker: string, price: number, quantity: string) {
+    const q = parseInt(quantity);
+    const payload = { 'ticker': ticker, 'price': price, 'quantity': q };
+    return this.http.post<any>(`https://csci-571-assignment3-416903.uw.r.appspot.com/api/portfolio/sell`, payload);
+  }
 }

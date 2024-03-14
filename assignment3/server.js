@@ -3,7 +3,7 @@ const cors = require('cors');
 const axios = require('axios');
 const app = express();
 const fs = require('node:fs');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, Double } = require('mongodb');
 
 const FINNHUB_API_KEY = 'REDACTED_FINNHUB_KEY';
 
@@ -111,7 +111,13 @@ app.post('/api/portfolio/buy', async (req, res) => {
             }
         });
 
-        res.json({ message: 'Stock bought successfully.' });
+        const updatedCollection = await collection.findOne({});
+
+        if (!updatedCollection) {
+            return res.status(500).json({ error: 'Failed to retrieve updated collection.' });
+        }
+
+        res.json(updatedCollection);
     } catch (error) {
         console.error('Error:', error);
         res.status(500).json({ error: 'An error occurred while buying stock.' });
@@ -124,7 +130,9 @@ app.post('/api/portfolio/buy', async (req, res) => {
 
 app.post('/api/portfolio/sell', async (req, res) => {
     try {
-        const { ticker, price, quantity } = req.body;
+        const { ticker, p, q } = req.body;
+        const price = parseFloat(p);
+        const quantity = parseInt(q);
         const income = price * quantity;
 
         client = new MongoClient(uri, {
@@ -153,7 +161,13 @@ app.post('/api/portfolio/sell', async (req, res) => {
             }
         });
 
-        res.json({ message: 'Stock sold successfully.' });
+        const updatedCollection = await collection.findOne({});
+
+        if (!updatedCollection) {
+            return res.status(500).json({ error: 'Failed to retrieve updated collection.' });
+        }
+
+        res.json(updatedCollection);
     } catch (error) {
         console.error('Error:', error);
         res.status(500).json({ error: 'An error occurred while selling stock.' });

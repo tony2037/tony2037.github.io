@@ -35,7 +35,7 @@
                     </div>
                     <div class="modal-footer">
                         <div class="mr-auto">Total: {{ stockCartValue }}</div>
-                        <div><button (click)="BuyStock(ticker, lastPrice, num.value)" type="button" [disabled]="num.value === '0' || num.value === ''" class="btn btn-success">Buy</button></div>
+                        <div><button (click)="BuyStock(ticker, lastPrice, num.value)" type="button" [disabled]="!canBuy(lastPrice, num.value)" class="btn btn-success">Buy</button></div>
                     </div>
                 </ng-template>
                 <button (click)="openModal(sellContent)" type="button" class="btn btn-danger">Sell</button>
@@ -48,7 +48,7 @@
                         Current Price: {{ lastPrice }}<br>
                         <div class="form-group row">
                             <div class="col-lg-1.5">
-                                <label class="col-form-label" style="margin-left: 15px">Quantity</label>
+                                <label class="col-form-label" style="margin-left: 15px">Quantity: {{ quantity }}</label>
                             </div>
                             <div class="col-lg-6 col-sm-12">
                                 <input #num (keyup)="onKey(num.value, lastPrice)" type="number" min="0" class="form-control" value="0">
@@ -57,7 +57,7 @@
                     </div>
                     <div class="modal-footer">
                         <div class="mr-auto">Total: {{ stockCartValue }}</div>
-                        <div><button (click)="SellStock(ticker, lastPrice, num.value)" type="button" [disabled]="num.value === '0' || num.value === ''" class="btn btn-success">Sell</button></div>
+                        <div><button (click)="SellStock(ticker, lastPrice, num.value)" type="button" [disabled]="!canSell(num.value)" class="btn btn-success">Sell</button></div>
                     </div>
                 </ng-template>
             </div>

@@ -80,6 +80,8 @@ export class DetailsComponent implements OnInit , OnDestroy {
   seriesData = [];
   watchlist :string[] = [];
   isWatched :boolean = false;
+  cash :number = 0;
+  quantity :number = 0;
 
   @ViewChild('num') num: any;
 
@@ -144,6 +146,8 @@ export class DetailsComponent implements OnInit , OnDestroy {
     this.buildInsights(this.ticker);
 
     this.buildWatchList();
+
+    this.buildPortfolio();
   }
 
   ngOnDestroy(): void {
@@ -163,6 +167,13 @@ export class DetailsComponent implements OnInit , OnDestroy {
     this.spinner = false;
     this.success = false;
     console.log('fail callbcak');
+  }
+
+  buildPortfolio() {
+    this.apiService.SendPortfolioGet().subscribe((data) => {
+      this.cash = data.cash;
+      this.quantity = (this.ticker in data.stocks) ? data.stocks[this.ticker].quantity : 0;
+    });
   }
 
   buildWatchList() {
@@ -549,16 +560,35 @@ export class DetailsComponent implements OnInit , OnDestroy {
     return this.http.get<any>(api);
   }
 
+  canBuy(price: number, quantity: string) {
+    const q = parseInt(quantity);
+    const total_price = price * q;
+    return total_price <= this.cash;
+  }
+
   BuyStock(ticker: string, price: number, quantity: string) {
-    const payload = { ticker, price,quantity };
-    console.log(`buystock ${payload}`);
-    return this.http.post<any>(`/api/portfolio/buy`, payload);
+    const q = parseInt(quantity);
+    const total_price = price * q;
+    if (this.canBuy(price, quantity)) {
+      this.apiService.SendPortfolioBuy(ticker, price, quantity).subscribe();
+      this.cash -= total_price;
+      this.quantity += q;
+    }
+  }
+
+  canSell(quantity: string) {
+    const q = parseInt(quantity);
+    return q <= this.quantity;
   }
 
   SellStock(ticker: string, price: number, quantity: string) {
-    const payload = { ticker, price, quantity };
-    console.log(`sellstock ${payload}`);
-    return this.http.post<any>(`/api/portfolio/sell`, payload);
+    const q = parseInt(quantity);
+    const total_price = price * q;
+    if (this.canSell(quantity)) {
+      this.apiService.SendPortfolioSell(ticker, price, quantity).subscribe();
+      this.quantity -= q;
+      this.cash += total_price;
+    }
   }
 
   openModal(content: TemplateRef<any>) {
