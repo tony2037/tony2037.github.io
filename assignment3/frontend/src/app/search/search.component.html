@@ -1,17 +1,27 @@
 <div class="container">
-    <h1><b>STOCK SEARCH</b></h1>
-    <div class="row">
-        <div class="col-5">
-          <form class="example-form">
-              <input matInput [formControl]="stockCodeControl" [matAutocomplete]="auto" placeholder="Enter stock code">
-              <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-                <mat-option *ngFor="let option of filteredOptions" [value]="option.symbol">
-                  {{ option.symbol }} - {{ option.description }}
-                </mat-option>
-              </mat-autocomplete>
-            <button mat-button (click)="search()">Search</button>
-            <button mat-button (click)="clear()">Clear</button>
-          </form>
-        </div>
+  <div class="row" style="margin-top: 3em;">
+    <div class="col-12" style="text-align: center;">
+      <h1><b>STOCK SEARCH</b></h1>
     </div>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-12 justify-content-center">
+      <form class="example-form" style="margin: auto; display: flex; align-items: center; justify-content: center;">
+        <div class="search-input-container" style="border-style: solid; border-radius: 1em; border-color: #11077d; padding: 0.3em; display: flex; align-items: center;">
+          <input matInput style="border-style: none; width: 20em;" [formControl]="stockCodeControl" [matAutocomplete]="auto" placeholder="Enter stock ticker symbol">
+          <button mat-icon-button (click)="search()" aria-label="Search" style="border-style: none; background-color: transparent;">
+            <mat-icon>search</mat-icon>
+          </button>
+          <button mat-icon-button (click)="clear()" aria-label="Clear" style="border-style: none; background-color: transparent;">
+            <mat-icon>clear</mat-icon>
+          </button>
+        </div>
+        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+          <mat-option *ngFor="let option of filteredOptions" [value]="option.symbol">
+            {{ option.symbol }} - {{ option.description }}
+          </mat-option>
+        </mat-autocomplete>
+      </form>
+    </div>
+  </div>
 </div>
