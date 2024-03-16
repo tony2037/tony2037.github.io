@@ -151,9 +151,9 @@
     
                                 <ng-template #Newcontent let-modal>
                                     <div class="modal-header" style="display: block;">
-                                        <button style="outline: none;" type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')"><span aria-hidden="true">&times;</span></button>
-                                        <h1 style="margin: 0;" class="modal-title"><b>{{article.related}}</b></h1>
-                                        <span style="color: gray;"><b>{{formatTimestampMdY(article.datetime)}}</b></span>
+                                        <button style="position: absolute; top: 0; right: 0; background: none; border: none; color: blue; text-decoration: underline;" type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')"><span aria-hidden="true">&times;</span></button>
+                                        <h3 style="margin: 0;" class="modal-title"><b>{{article.related}}</b></h3>
+                                        <span style="color: gray; font-size: medium;"><b>{{formatTimestampMdY(article.datetime)}}</b></span>
                                     </div>
                                     <div class="modal-body">
                                         <span style="font-size: 20px;"><b>{{article.headline}}</b><br></span>
@@ -165,10 +165,10 @@
                                                 Share<br><br>
                                                 <div style="display: flex;">
                                                     <a target="_blank" href="https://twitter.com/intent/tweet?text={{article.headline}}&url={{article.url}}">
-                                                        <img src="https://about.x.com/content/dam/about-twitter/x/brand-toolkit/logo-black.png.twimg.1920.png" alt="Twitter Logo" width="35" height="35">
+                                                        <img src="https://about.x.com/content/dam/about-twitter/x/brand-toolkit/logo-black.png.twimg.1920.png" alt="Twitter Logo" width="45" height="45">
                                                     </a>
-                                                    <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?display=popup&u={{article.url}}&amp;src=sdkpreparse">
-                                                        <img src="https://scontent-lax3-2.xx.fbcdn.net/v/t39.8562-6/419903227_1771882663255491_7530620370863632840_n.png?_nc_cat=101&ccb=1-7&_nc_sid=f537c7&_nc_ohc=FqmfP-ZzIr8AX8Z0Oz6&_nc_ht=scontent-lax3-2.xx&oh=00_AfBf1Au1bocknm4n7-m8wbvE8ZhSv6WwBQM4IIkDNOJ2Bg&oe=65EFCDA1" alt="Facebook Logo" width="35" height="35">
+                                                    <a style="margin-left: 1.2em;" target="_blank" href="https://www.facebook.com/sharer/sharer.php?display=popup&u={{article.url}}&amp;src=sdkpreparse">
+                                                        <img src="https://www.vectorico.com/wp-content/uploads/2018/02/Facebook-Logo.png" alt="Facebook Logo" width="45" height="45">
                                                     </a>
                                                 </div>
                                             </div>
