@@ -10,66 +10,84 @@
     <ng-template #result_block>
         <div class="row">
             <div class="col-4">
-                <span><b> {{ ticker }} </b></span>
-                <button (click)="onClickWatchlist()" *ngIf="isWatched == true; else nowatch" style="background-color: transparent; border-style: none;"><svg width="30" height="30" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="yellow"/></svg></button>
-                <ng-template #nowatch>
-                    <button (click)="onClickWatchlist()" style="background-color: transparent; border-style: none;"><svg #nowatch_star width="30" height="30" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="none" stroke="yellow"/></svg></button>
-                </ng-template>
-                <span> {{ companyName }} </span>
-                <span> {{ exchangeCode }} </span>
-                <button (click)="openModal(buyContent)" type="button" class="btn btn-success">Buy</button>
-                <ng-template #buyContent let-modal>
-                    <div class="modal-header" style="display: block;">
-                        <button style="outline: none;" type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')"><span aria-hidden="true">&times;</span></button>
-                        <h1 style="font-size: 15px; font-weight: 400;">{{ ticker }}</h1>
+                <div class="row">
+                    <div style="text-align: center;" class="col-12">
+                        <span style="font-size: x-large;" ><b> {{ ticker }} </b></span>
+                        <button (click)="onClickWatchlist()" *ngIf="isWatched == true; else nowatch" style="background-color: transparent; border-style: none;"><svg width="30" height="30" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="yellow"/></svg></button>
+                        <ng-template #nowatch>
+                            <button (click)="onClickWatchlist()" style="background-color: transparent; border-style: none;"><svg #nowatch_star width="30" height="30" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="none" stroke="yellow"/></svg></button>
+                        </ng-template>
                     </div>
-                    <div class="modal-body">
-                        Current Price: {{ lastPrice }}<br>
-                        <div class="form-group row">
-                            <div class="col-lg-1.5">
-                                <label class="col-form-label" style="margin-left: 15px">Money in Wallet: ${{ showCash() }}</label>
+                </div>
+                <div style="text-align: center;" class="row">
+                    <span style="color: gray; font-size: x-large;"> {{ companyName }} </span>
+                </div>
+                <div class="row">
+                    <span style=" text-align: center; font-size: medium; color: gray;"> {{ exchangeCode }} </span>
+                </div>
+                <div class="row">
+                    <div class="col-4"></div>
+                    <div class="col-2">
+                        <button (click)="openModal(buyContent)" type="button" class="btn btn-success">Buy</button>
+                        <ng-template #buyContent let-modal>
+                            <div class="modal-header" style="display: block;">
+                                <button style="outline: none;" type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')"><span aria-hidden="true">&times;</span></button>
+                                <h1 style="font-size: 15px; font-weight: 400;">{{ ticker }}</h1>
                             </div>
-                            <div class="col-lg-6 col-sm-12">
-                                <input #num (keyup)="onKey(num.value, lastPrice)" type="number" min="0" class="form-control" value="0">
+                            <div class="modal-body">
+                                Current Price: {{ lastPrice }}<br>
+                                <div class="form-group row">
+                                    <div class="col-lg-1.5">
+                                        <label class="col-form-label" style="margin-left: 15px">Money in Wallet: ${{ showCash() }}</label>
+                                    </div>
+                                    <div class="col-lg-6 col-sm-12">
+                                        <input #num (keyup)="onKey(num.value, lastPrice)" type="number" min="0" class="form-control" value="0">
+                                    </div>
+                                    <div *ngIf="!canBuy(lastPrice, num.value)" class="col-12">
+                                        <p style="color: red;">Not enough money in wallet!</p>
+                                    </div>
+                                </div>
                             </div>
-                            <div *ngIf="!canBuy(lastPrice, num.value)" class="col-12">
-                                <p style="color: red;">Not enough money in wallet!</p>
+                            <div class="modal-footer">
+                                <div class="mr-auto">Total: {{ stockCartValue }}</div>
+                                <div><button (click)="BuyStock(ticker, lastPrice, num.value, modal)" type="button" [disabled]="!canBuy(lastPrice, num.value)" class="btn btn-success">Buy</button></div>
                             </div>
-                        </div>
+                        </ng-template>
                     </div>
-                    <div class="modal-footer">
-                        <div class="mr-auto">Total: {{ stockCartValue }}</div>
-                        <div><button (click)="BuyStock(ticker, lastPrice, num.value, modal)" type="button" [disabled]="!canBuy(lastPrice, num.value)" class="btn btn-success">Buy</button></div>
-                    </div>
-                </ng-template>
-                <button (click)="openModal(sellContent)" type="button" class="btn btn-danger">Sell</button>
-                <ng-template #sellContent let-modal>
-                    <div class="modal-header" style="display: block;">
-                        <button style="outline: none;" type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')"><span aria-hidden="true">&times;</span></button>
-                        <h1 style="font-size: 15px; font-weight: 400;">{{ ticker }}</h1>
-                    </div>
-                    <div class="modal-body">
-                        Current Price: {{ lastPrice }}<br>
-                        <div class="form-group row">
-                            <div class="col-lg-1.5">
-                                <label class="col-form-label" style="margin-left: 15px">Quantity: {{ quantity }}</label>
+                    <div class="col-2">
+                        <button (click)="openModal(sellContent)" type="button" class="btn btn-danger">Sell</button>
+                        <ng-template #sellContent let-modal>
+                            <div class="modal-header" style="display: block;">
+                                <button style="outline: none;" type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')"><span aria-hidden="true">&times;</span></button>
+                                <h1 style="font-size: 15px; font-weight: 400;">{{ ticker }}</h1>
                             </div>
-                            <div class="col-lg-6 col-sm-12">
-                                <input #num (keyup)="onKey(num.value, lastPrice)" type="number" min="0" class="form-control" value="0">
+                            <div class="modal-body">
+                                Current Price: {{ lastPrice }}<br>
+                                <div class="form-group row">
+                                    <div class="col-lg-1.5">
+                                        <label class="col-form-label" style="margin-left: 15px">Quantity: {{ quantity }}</label>
+                                    </div>
+                                    <div class="col-lg-6 col-sm-12">
+                                        <input #num (keyup)="onKey(num.value, lastPrice)" type="number" min="0" class="form-control" value="0">
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                            <div class="modal-footer">
+                                <div class="mr-auto">Total: {{ stockCartValue }}</div>
+                                <div><button (click)="SellStock(ticker, lastPrice, num.value, modal)" type="button" [disabled]="!canSell(num.value)" class="btn btn-success">Sell</button></div>
+                            </div>
+                        </ng-template>
                     </div>
-                    <div class="modal-footer">
-                        <div class="mr-auto">Total: {{ stockCartValue }}</div>
-                        <div><button (click)="SellStock(ticker, lastPrice, num.value, modal)" type="button" [disabled]="!canSell(num.value)" class="btn btn-success">Sell</button></div>
-                    </div>
-                </ng-template>
+                    <div class="col-4"></div>
+                </div>
             </div>
-            <div class="col-4"><img [src]="logoUrl" alt="Company Logo"></div>
+            <div class="col-4" style="display: grid; place-items: center;"><img height="100" [src]="logoUrl" alt="Company Logo"></div>    
             <div class="col-4">
-                <span> {{lastPrice}} </span>
-                <span> {{change}} ({{changePercentage}}%) </span>
-                <span> {{currentSecond}} </span>
+                <div style="text-align: center;" class="row">
+                    <h4 style="color: red;"> {{lastPrice}} </h4>
+                    <h5 style="color: red;"> {{change}} ({{changePercentage}}%) </h5>
+                    <p style="color: gray;"> {{currentSecond}} </p>
+                </div>
             </div>
         </div>
         <div>

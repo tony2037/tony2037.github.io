@@ -122,7 +122,7 @@ export class DetailsComponent implements OnInit , OnDestroy {
         this.successCallback();
         this.lastPrice = data.c;
         this.change = data.d;
-        this.changePercentage = data.dp;
+        this.changePercentage = parseFloat(data.dp.toFixed(2));
         this.highPrice = data.h;
         this.lowPrice = data.l;
         this.openPrice = data.o;
