@@ -90,170 +90,165 @@
                 </div>
             </div>
         </div>
-        <div>
-            <span *ngIf="marketStatus == false" style="color: red;">Market Closed on {{ lastDay }} 13:00:00</span>
-            <span *ngIf="marketStatus == true" style="color: green;">Market is Open</span>
+        <div style="text-align: center;" class="row">
+            <p *ngIf="marketStatus == false" style="color: red;">Market Closed on {{ lastDay }} 13:00:00</p>
+            <p *ngIf="marketStatus == true" style="color: green;">Market is Open</p>
         </div>
-        <mat-tab-group mat-stretch-tabs>
-            <mat-tab label="Summary">
-                <ng-template matTabContent>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="row">
-                                <div class="col-12">
-                                    <div class="row">
-                                        <div class="col-4">
-                                            High Price: <br>
-                                            Low Price: <br>
-                                            Open Price: <br>
-                                            Prev. Close: <br>
-                                        </div>
-                                        <div class="col-1">
-                                            {{ highPrice }} <br>
-                                            {{ lowPrice }} <br>
-                                            {{ openPrice }} <br>
-                                            {{ closePrice }} <br>
-                                        </div>
+        <div class="row">
+            <mat-tab-group style="width: 85%; margin: auto;" mat-stretch-tabs>
+                <mat-tab label="Summary">
+                    <ng-template matTabContent>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div style="margin-top: 1em;" class="row">
+                                    <div class="col-2"></div>
+                                    <div class="col-10">
+                                        <p style="font-size: medium;"><b>High Price:</b> {{ highPrice }}</p>
+                                        <p><b>Low Price:</b> {{ lowPrice }}</p>
+                                        <p><b>Open Price:</b> {{ openPrice }}</p>
+                                        <p><b>Prev. Close:</b> {{ closePrice }}</p>
                                     </div>
                                 </div>
+                                <div style="text-align: center;" class="row">
+                                    <h3 style="color: rgb(49, 41, 41);"><u><b>About the company</b></u></h3>
+                                    <p><b>IPO Start Date:</b> {{ ipoDate }}</p>
+                                    <p><b>Industry:</b> {{ industry }}</p>
+                                    <p><b>Webpage:</b> <a [href]="webpage">{{ webpage }}</a></p>
+                                    <p><b>Company peers:</b></p>
+                                    <p><a *ngFor="let peer of peers" (click)="reloadAndNavigate(peer)" style="display: inline-block; margin-right: 10px; white-space: nowrap;"> {{ peer }}, </a></p>
+                                </div>
                             </div>
-                            <h1><u><b>About the company</b></u></h1>
-                            IPO Start Date: {{ ipoDate }}<br><br>
-                            Industry: {{ industry }}<br><br>
-                            Webpage: <a [href]="webpage">{{ webpage }}</a><br><br> 
-                            Company peers:<br><br>
-                            <a *ngFor="let peer of peers" (click)="reloadAndNavigate(peer)"> {{ peer }}, </a>
-                        </div>
-                        <div class="col-sm-6">
-                            <div *ngIf="chartLoaded == true">
-                                <highcharts-chart
-                                    [Highcharts]="Highcharts"
-                                    [constructorType]="'stockChart'"
-                                    [options]="chartSummaryOptions"
-                                    [(update)]="chartUpdateFlag"
-                                    style="width: 100%; display: block;"
-                                ></highcharts-chart>
+                            <div class="col-sm-6">
+                                <div *ngIf="chartLoaded == true">
+                                    <highcharts-chart
+                                        [Highcharts]="Highcharts"
+                                        [constructorType]="'stockChart'"
+                                        [options]="chartSummaryOptions"
+                                        [(update)]="chartUpdateFlag"
+                                        style="width: 100%; display: block;"
+                                    ></highcharts-chart>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </ng-template>
-            </mat-tab>
-            <mat-tab label="Top News">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-sm-6" *ngFor="let article of news">
-                            <div (click)="openModal(Newcontent)" class="card h-100">
-                                <div class="row no-gutters">
-                                    <div class="col-md-4">
-                                        <img class="card-img" [src]="article.image" alt="" width="35" height="135">
-                                    </div>
-                                    <div class="col-md-8">
-                                        <div class="card-body">
-                                            <p class="card-text">{{ article.headline }}</p>
+                    </ng-template>
+                </mat-tab>
+                <mat-tab label="Top News">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm-6" *ngFor="let article of news">
+                                <div (click)="openModal(Newcontent)" class="card h-100">
+                                    <div class="row no-gutters">
+                                        <div class="col-md-4">
+                                            <img class="card-img" [src]="article.image" alt="" width="35" height="135">
                                         </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <ng-template #Newcontent let-modal>
-                                <div class="modal-header" style="display: block;">
-                                    <button style="outline: none;" type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')"><span aria-hidden="true">&times;</span></button>
-                                    <h1 style="margin: 0;" class="modal-title"><b>{{article.related}}</b></h1>
-                                    <span style="color: gray;"><b>{{formatTimestampMdY(article.datetime)}}</b></span>
-                                </div>
-                                <div class="modal-body">
-                                    <span style="font-size: 20px;"><b>{{article.headline}}</b><br></span>
-                                    <span style="font-size: 13px;">{{article.summary}}<br></span>
-                                    <span style="font-size: small; color: gray;">For more details click <a target="_blank" [href]="article.url">here</a></span>
-                                    <br><br><br>
-                                    <div class="card">
-                                        <div class="card-body">
-                                            Share<br><br>
-                                            <div style="display: flex;">
-                                                <a target="_blank" href="https://twitter.com/intent/tweet?text={{article.headline}}&url={{article.url}}">
-                                                    <img src="https://about.x.com/content/dam/about-twitter/x/brand-toolkit/logo-black.png.twimg.1920.png" alt="Twitter Logo" width="35" height="35">
-                                                </a>
-                                                <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?display=popup&u={{article.url}}&amp;src=sdkpreparse">
-                                                    <img src="https://scontent-lax3-2.xx.fbcdn.net/v/t39.8562-6/419903227_1771882663255491_7530620370863632840_n.png?_nc_cat=101&ccb=1-7&_nc_sid=f537c7&_nc_ohc=FqmfP-ZzIr8AX8Z0Oz6&_nc_ht=scontent-lax3-2.xx&oh=00_AfBf1Au1bocknm4n7-m8wbvE8ZhSv6WwBQM4IIkDNOJ2Bg&oe=65EFCDA1" alt="Facebook Logo" width="35" height="35">
-                                                </a>
+                                        <div class="col-md-8">
+                                            <div class="card-body">
+                                                <p class="card-text">{{ article.headline }}</p>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </ng-template>
-                        </div>
-                    </div>
-                </div>
-            </mat-tab>
-            <mat-tab label="Charts">
-                <ng-template matTabContent>
-                    <div *ngIf="bigChartLoaded == true">
-                        <highcharts-chart
-                            [Highcharts]="Highcharts"
-                            [constructorType]="'stockChart'"
-                            [options]="bigChartOptions"
-                            style="width: 100%; display: block; height: 600px;"
-                        ></highcharts-chart>
-                    </div>
-                </ng-template>
-            </mat-tab>
-            <mat-tab label="Insights">
-                <div class="container">
-                    <h2 style="text-align: center; color: gray;">Insider Sentiments</h2>
-                    <div class="row">
-                        <div class="col"></div>
-                        <div class="col-6">
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">{{companyName}}</th>
-                                        <th scope="col">MSPR</th>
-                                        <th scope="col">Change</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <th scope="row">Total</th>
-                                        <td>{{totalMSPR}}</td>
-                                        <td>{{totalChange}}</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Positive</th>
-                                        <td>{{positiveMSPR}}</td>
-                                        <td>{{positiveChange}}</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Negative</th>
-                                        <td>{{negativeMSPR}}</td>
-                                        <td>{{negativeChange}}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="col"></div>
-                    </div>
-                    <div class="row">
-                        <div class="col-6">
-                            <div style="width: 100%;">
-                                <highcharts-chart
-                                  [Highcharts]="Highcharts"
-                                  [options]="recommendationTrendsChartOption"
-                                  style="width: 100%; height: 400px; display: block;">
-                                </highcharts-chart>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div style="width: 100%;">
-                                <highcharts-chart
-                                  [Highcharts]="Highcharts"
-                                  [options]="historicalEPSChartOption"
-                                  style="width: 100%; height: 400px; display: block;">
-                                </highcharts-chart>
+    
+                                <ng-template #Newcontent let-modal>
+                                    <div class="modal-header" style="display: block;">
+                                        <button style="outline: none;" type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')"><span aria-hidden="true">&times;</span></button>
+                                        <h1 style="margin: 0;" class="modal-title"><b>{{article.related}}</b></h1>
+                                        <span style="color: gray;"><b>{{formatTimestampMdY(article.datetime)}}</b></span>
+                                    </div>
+                                    <div class="modal-body">
+                                        <span style="font-size: 20px;"><b>{{article.headline}}</b><br></span>
+                                        <span style="font-size: 13px;">{{article.summary}}<br></span>
+                                        <span style="font-size: small; color: gray;">For more details click <a target="_blank" [href]="article.url">here</a></span>
+                                        <br><br><br>
+                                        <div class="card">
+                                            <div class="card-body">
+                                                Share<br><br>
+                                                <div style="display: flex;">
+                                                    <a target="_blank" href="https://twitter.com/intent/tweet?text={{article.headline}}&url={{article.url}}">
+                                                        <img src="https://about.x.com/content/dam/about-twitter/x/brand-toolkit/logo-black.png.twimg.1920.png" alt="Twitter Logo" width="35" height="35">
+                                                    </a>
+                                                    <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?display=popup&u={{article.url}}&amp;src=sdkpreparse">
+                                                        <img src="https://scontent-lax3-2.xx.fbcdn.net/v/t39.8562-6/419903227_1771882663255491_7530620370863632840_n.png?_nc_cat=101&ccb=1-7&_nc_sid=f537c7&_nc_ohc=FqmfP-ZzIr8AX8Z0Oz6&_nc_ht=scontent-lax3-2.xx&oh=00_AfBf1Au1bocknm4n7-m8wbvE8ZhSv6WwBQM4IIkDNOJ2Bg&oe=65EFCDA1" alt="Facebook Logo" width="35" height="35">
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ng-template>
                             </div>
                         </div>
                     </div>
-                </div>
-            </mat-tab>
-          </mat-tab-group>
+                </mat-tab>
+                <mat-tab label="Charts">
+                    <ng-template matTabContent>
+                        <div *ngIf="bigChartLoaded == true">
+                            <highcharts-chart
+                                [Highcharts]="Highcharts"
+                                [constructorType]="'stockChart'"
+                                [options]="bigChartOptions"
+                                style="width: 100%; display: block; height: 600px;"
+                            ></highcharts-chart>
+                        </div>
+                    </ng-template>
+                </mat-tab>
+                <mat-tab label="Insights">
+                    <div class="container">
+                        <h2 style="text-align: center; color: gray;">Insider Sentiments</h2>
+                        <div class="row">
+                            <div class="col"></div>
+                            <div class="col-6">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">{{companyName}}</th>
+                                            <th scope="col">MSPR</th>
+                                            <th scope="col">Change</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row">Total</th>
+                                            <td>{{totalMSPR}}</td>
+                                            <td>{{totalChange}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Positive</th>
+                                            <td>{{positiveMSPR}}</td>
+                                            <td>{{positiveChange}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Negative</th>
+                                            <td>{{negativeMSPR}}</td>
+                                            <td>{{negativeChange}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <div style="width: 100%;">
+                                    <highcharts-chart
+                                      [Highcharts]="Highcharts"
+                                      [options]="recommendationTrendsChartOption"
+                                      style="width: 100%; height: 400px; display: block;">
+                                    </highcharts-chart>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div style="width: 100%;">
+                                    <highcharts-chart
+                                      [Highcharts]="Highcharts"
+                                      [options]="historicalEPSChartOption"
+                                      style="width: 100%; height: 400px; display: block;">
+                                    </highcharts-chart>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-tab>
+            </mat-tab-group>
+        </div>
     </ng-template>
 </div>
