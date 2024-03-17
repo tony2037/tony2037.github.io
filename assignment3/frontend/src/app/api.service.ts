@@ -41,13 +41,7 @@ export class ApiService {
 
   SendHistoricalEPS(symbol:String) {
     symbol = symbol.toUpperCase();
-    let TODAY = new Date();
-    TODAY = new Date(TODAY.getFullYear() - 1, TODAY.getMonth(), TODAY.getDate() - 1);
-    const FROM = new Date(TODAY.getFullYear() - 1, TODAY.getMonth(), TODAY.getDate() - 1);
-    const TO = TODAY;
-    const FROM_STRING = this.formatDate(FROM);
-    const TO_STRING = this.formatDate(TO);
-    const api = `https://finnhub.io/api/v1/calendar/earnings?from=${FROM_STRING}&to=${TO_STRING}&symbol=${symbol}&token=${this.FINNHUB_API_KEY}`;
+    const api = `https://finnhub.io/api/v1/stock/earnings?symbol=${symbol}&token=${this.FINNHUB_API_KEY}`;
     console.log(`call api: ${api}`);
     return this.http.get<any>(api);
   }

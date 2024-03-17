@@ -77,7 +77,7 @@ export class DetailsComponent implements OnInit , OnDestroy {
   holds: number[] = [];
   sells: number[] = [];
   strongSells :number[] = [];
-  seriesData = [];
+  seriesData: Highcharts.SeriesOptionsType[] = [];
   watchlist :string[] = [];
   isWatched :boolean = false;
   cash :number = 0;
@@ -325,20 +325,18 @@ export class DetailsComponent implements OnInit , OnDestroy {
 
     this.apiService.SendHistoricalEPS(symbol).subscribe((data) => {
       interface Entry {
-        date: string;
-        epsActual: number;
-        epsEstimate: number;
-        hour: string;
+        actual: number;
+        estimate: number;
+        period: string;
         quarter: number;
-        revenueActual: number;
-        revenueEstimate: number;
+        surprise: number;
+        surprisePercent: number;
         symbol: string;
         year: number;
       };
-      this.seriesData = data.earningsCalendar.map((entry: Entry) => ({
+      this.seriesData = data.map((entry :Entry) => ({
         name: `Q${entry.quarter} ${entry.year}`,
-        x: Date.parse(entry.date),
-        y: entry.epsActual - entry.epsEstimate
+        data: [[Date.parse(entry.period), entry.actual - entry.estimate]]
       }));
 
       this.historicalEPSChartOption = {
