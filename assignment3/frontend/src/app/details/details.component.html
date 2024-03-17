@@ -30,28 +30,29 @@
                     <div class="col-2">
                         <button (click)="openModal(buyContent)" type="button" class="btn btn-success">Buy</button>
                         <ng-template #buyContent let-modal>
-                            <div class="modal-header" style="display: block;">
-                                <button style="outline: none;" type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')"><span aria-hidden="true">&times;</span></button>
-                                <h1 style="font-size: 15px; font-weight: 400;">{{ ticker }}</h1>
+                            <div class="modal-header" style="display: flex; align-items: center;">
+                                <h1 style="font-size: large; font-weight: 400; margin-right: auto; color: #3a3b3c;">{{ ticker }}</h1>
+                                <button style="outline: none; background-color: transparent; border-style: none; color: blue; text-decoration: underline;" type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
                             </div>
                             <div class="modal-body">
-                                Current Price: {{ lastPrice }}<br>
-                                <div class="form-group row">
-                                    <div class="col-lg-1.5">
-                                        <label class="col-form-label" style="margin-left: 15px">Money in Wallet: ${{ showCash() }}</label>
-                                    </div>
-                                    <div class="col-lg-6 col-sm-12">
-                                        <input #num (keyup)="onKey(num.value, lastPrice)" type="number" min="0" class="form-control" value="0">
-                                    </div>
-                                    <div *ngIf="!canBuy(lastPrice, num.value)" class="col-12">
-                                        <p style="color: red;">Not enough money in wallet!</p>
+                                <div class="container">
+                                    <div class="form-group row">
+                                        <div class="col-12"><p>Current Price: {{ lastPrice }}</p></div>
+                                        <div class="col-12"><p>Money in Wallet: ${{ showCash() }}</p></div>
+                                        <div class="col-3"><p>Quantity: </p></div>
+                                        <div class="col-9"><input #num (keyup)="onKey(num.value, lastPrice)" type="number" min="0" class="form-control" value="0"></div>
+                                        <div *ngIf="!canBuy(lastPrice, num.value)" class="col-12">
+                                            <p style="color: red;">Not enough money in wallet!</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="modal-footer">
-                                <div class="mr-auto">Total: {{ stockCartValue }}</div>
+                            <div class="modal-footer" style="display: flex; justify-content: space-between; align-items: center;">
+                                <div style="margin-right: auto;">Total: {{ stockCartValue }}</div>
                                 <div><button (click)="BuyStock(ticker, lastPrice, num.value, modal)" type="button" [disabled]="!canBuy(lastPrice, num.value)" class="btn btn-success">Buy</button></div>
-                            </div>
+                            </div>                            
                         </ng-template>
                     </div>
                     <div class="col-2">
