@@ -1,11 +1,11 @@
 <div class="container">
-    <div class="row">My Portfolio</div>
-    <div class="row">Money in the Wallet: ${{ cash }}</div>
+    <div style="margin-top: 3em;" class="row"><h3>My Portfolio</h3></div>
+    <div class="row"><p style="font-size: medium;">Money in the Wallet: ${{ cash }}</p></div>
     <div class="row">
-        <div *ngFor="let stock of stocks" class="col-8">
+        <div style="margin-top: 1em;" *ngFor="let stock of stocks" class="col-8">
             <div class="card">
                 <div class="card-header">
-                    <span><b>{{ stock.ticker }}</b> {{ stock.company_name }}</span>
+                    <span><b style="font-size: x-large;">{{ stock.ticker }}</b> {{ stock.company_name }}</span>
                 </div>
                 <div class="card-body">
                     <div class="row">
@@ -22,8 +22,8 @@
                     </div>
                 </div>
                 <div class="card-footer">
-                    <a href="#" class="btn btn-primary">Buy</a>
-                    <a href="#" class="btn btn-danger">Sell</a>
+                    <a href="#" [routerLink]="'/search/' + stock.ticker" class="btn btn-primary">Buy</a>
+                    <a [routerLink]="'/search/' + stock.ticker" style="margin-left: .5em;" class="btn btn-danger">Sell</a>
                 </div>
               </div>
         </div>
