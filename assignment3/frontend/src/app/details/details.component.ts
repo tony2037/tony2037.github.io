@@ -539,11 +539,13 @@ export class DetailsComponent implements OnInit , OnDestroy {
 
   SendAggsHourly(symbol:String) {
     symbol = symbol.toUpperCase();
-    const NOW: number = Date.now();
-    const SIX_HOURS_IN_MS: number = 6 * 60 * 60 * 1000;
-    const FROM: number = NOW - SIX_HOURS_IN_MS;
+    const TODAY = new Date();
+    const FROM = new Date(TODAY.getFullYear(), TODAY.getMonth(), TODAY.getDate() - 2);
+    const TO = TODAY;
+    const FROM_STRING = this.formatDate(FROM);
+    const TO_STRING = this.formatDate(TO);
 
-    const api = `https://api.polygon.io/v2/aggs/ticker/${symbol}/range/1/minute/${FROM}/${NOW}?adjusted=true&sort=asc&apiKey=${this.POLYGON_API_KEY_v2}`;
+    const api = `https://api.polygon.io/v2/aggs/ticker/${symbol}/range/1/hour/${FROM_STRING}/${TO_STRING}?adjusted=true&sort=asc&apiKey=${this.POLYGON_API_KEY_v2}`;
     console.log(`call api: ${api}`);
     return this.http.get<any>(api);
   }
