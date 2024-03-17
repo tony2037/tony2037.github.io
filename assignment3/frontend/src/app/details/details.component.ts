@@ -63,7 +63,7 @@ export class DetailsComponent implements OnInit , OnDestroy {
   recommendationTrendsChartOption!: Highcharts.Options;
   historicalEPSChartOption!: Highcharts.Options;
   ohlc: any[] = [];
-  volumes: number[] = [];
+  volumes :number[][] = [];
   news: any[] = [];
   totalMSPR: number = 0;
   positiveMSPR: number = 0;
@@ -400,8 +400,8 @@ export class DetailsComponent implements OnInit , OnDestroy {
         resultsCount: data.resultsCount,
         results: data.results
       };
-      this.ohlc = parsedData.results.map(result => [result.v, result.o, result.h, result.l, result.c]);
-      this.volumes = parsedData.results.map(result => result.v);
+      this.ohlc = parsedData.results.map(result => [result.t, result.o, result.h, result.l, result.c]);
+      this.volumes = parsedData.results.map(result => [result.t, result.v]);
       // fill the chart options
       this.bigChartLoaded = true;
       this.bigChartUpdateFlag = true;
@@ -553,7 +553,7 @@ export class DetailsComponent implements OnInit , OnDestroy {
   SendAggs(symbol:String) {
     symbol = symbol.toUpperCase();
     const TODAY = new Date();
-    const FROM = new Date(TODAY.getFullYear(), TODAY.getMonth() - 6, TODAY.getDate() - 1);
+    const FROM = new Date(TODAY.getFullYear() - 2, TODAY.getMonth(), TODAY.getDate() - 1);
     const TO = TODAY;
     const FROM_STRING = this.formatDate(FROM);
     const TO_STRING = this.formatDate(TO);
