@@ -41,6 +41,11 @@ export class WatchlistComponent implements OnInit , OnDestroy {
 
   BuildCards() {
     this.apiService.SendWatchlistGet().subscribe((data) => {
+      if (data.length === 0) {
+        this.spinner = false;
+        return;
+      }
+
       const observables = data.map((ticker: string) => {
         ticker = ticker.toUpperCase();
         return forkJoin([
@@ -67,5 +72,13 @@ export class WatchlistComponent implements OnInit , OnDestroy {
 
   onClickCard(ticker:String) {
     this.router.navigate(['/search', ticker]);
+  }
+
+  onClickClear(ticker:string) {
+    ticker = ticker.toUpperCase();
+    this.apiService.SendWatchlistDel(ticker).subscribe();
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      this.router.navigate(['/watchlist']);
+  });
   }
 }
