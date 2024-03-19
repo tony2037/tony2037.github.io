@@ -77,7 +77,8 @@ export class DetailsComponent implements OnInit , OnDestroy {
   holds: number[] = [];
   sells: number[] = [];
   strongSells :number[] = [];
-  seriesData: Highcharts.SeriesOptionsType[] = [];
+  actualData :number[] = [];
+  estimateData :number[] = [];
   watchlist :string[] = [];
   isWatched :boolean = false;
   cash :number = 0;
@@ -334,17 +335,22 @@ export class DetailsComponent implements OnInit , OnDestroy {
         symbol: string;
         year: number;
       };
-      this.seriesData = data.map((entry :Entry) => ({
-        name: `Q${entry.quarter} ${entry.year}`,
-        data: [[Date.parse(entry.period), entry.actual - entry.estimate]]
-      }));
+      for (let i = 0; i < data.length; i++) {
+        const entry: Entry = data[i];
+        this.actualData.push(entry.actual);
+        this.estimateData.push(entry.estimate);
+      }
+
+      console.log(`actualData: ${this.actualData}`);
+      console.log(this.actualData);
+
 
       this.historicalEPSChartOption = {
         chart: {
-          type: 'line'
+          type: 'spline'
         },
         title: {
-          text: 'Quarterly EPS Surprise'
+          text: 'Historical EPS Surprise'
         },
         xAxis: {
           type: 'datetime',
@@ -354,11 +360,20 @@ export class DetailsComponent implements OnInit , OnDestroy {
         },
         yAxis: {
           title: {
-            text: 'EPS Surprise'
+            text: 'Quaterly EPS'
           }
         },
-        series: this.seriesData,
+        series: [{
+          type: 'spline',
+          name: 'Actual',
+          data: this.actualData
+        }, {
+          type: 'spline',
+          name: 'Estimate',
+          data: this.estimateData
+        }]
       };
+
     });
   }
 
