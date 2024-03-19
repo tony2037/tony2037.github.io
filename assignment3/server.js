@@ -6,6 +6,8 @@ const fs = require('node:fs');
 const { MongoClient, ServerApiVersion, Double } = require('mongodb');
 
 const FINNHUB_API_KEY = 'REDACTED_FINNHUB_KEY';
+const POLYGON_API_KEY = 'REDACTED_POLYGON_KEY';
+const POLYGON_API_KEY_v2 = 'sxcDyjdA5nxbhxVzWkd154nqyLWKjk2C';
 
 const { dbPassword } = require('./password');
 const uri = `mongodb+srv://ztex030640417:${dbPassword}@cluster0.zpk5y5w.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
@@ -15,6 +17,48 @@ const collectionPortfolio = 'portfolio';
 
 app.use(cors());
 app.use(express.json());
+
+// Route: /api/SendAggs?symbol=aapl&from=2022-03-18&to=2024-03-18
+app.get('/api/SendAggs', async (req, res) => {
+    try {
+        const symbol = req.query.symbol.toUpperCase();
+        const from = req.query.from;
+        const to = req.query.to;
+
+        if (!symbol || !from || !to) {
+            return res.status(400).json({ error: 'parameters is required.' });
+        }
+
+        const api = `https://api.polygon.io/v2/aggs/ticker/${symbol}/range/1/day/${from}/${to}?adjusted=true&sort=asc&apiKey=${POLYGON_API_KEY}`;
+        console.log(api);
+        const response = await axios.get(api);
+        res.json(response.data);
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'An error occurred while fetching data.' });
+    }
+});
+
+// Route: /api/SendAggsHourly?symbol=aapl&from=2024-03-16&to=2024-03-18
+app.get('/api/SendAggsHourly', async (req, res) => {
+    try {
+        const symbol = req.query.symbol.toUpperCase();
+        const from = req.query.from;
+        const to = req.query.to;
+
+        if (!symbol || !from || !to) {
+            return res.status(400).json({ error: 'parameters is required.' });
+        }
+
+        const api = `https://api.polygon.io/v2/aggs/ticker/${symbol}/range/1/hour/${from}/${to}?adjusted=true&sort=asc&apiKey=${POLYGON_API_KEY_v2}`;
+        console.log(api);
+        const response = await axios.get(api);
+        res.json(response.data);
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'An error occurred while fetching data.' });
+    }
+});
 
 // Route: /api/profile2?symbol=${symbol}
 app.get('/api/profile2', async (req, res) => {
