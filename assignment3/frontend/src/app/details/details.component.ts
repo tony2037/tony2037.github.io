@@ -335,15 +335,16 @@ export class DetailsComponent implements OnInit , OnDestroy {
         symbol: string;
         year: number;
       };
+      let customxLabels = [];
       for (let i = 0; i < data.length; i++) {
         const entry: Entry = data[i];
         this.actualData.push(entry.actual);
         this.estimateData.push(entry.estimate);
+        customxLabels.push(`${entry.period}\nSurprise: ${entry.surprise}`);
       }
 
       console.log(`actualData: ${this.actualData}`);
       console.log(this.actualData);
-
 
       this.historicalEPSChartOption = {
         chart: {
@@ -353,10 +354,7 @@ export class DetailsComponent implements OnInit , OnDestroy {
           text: 'Historical EPS Surprise'
         },
         xAxis: {
-          type: 'datetime',
-          title: {
-            text: 'Date'
-          }
+          categories: customxLabels,
         },
         yAxis: {
           title: {
