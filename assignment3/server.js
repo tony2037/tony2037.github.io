@@ -16,6 +16,140 @@ const collectionPortfolio = 'portfolio';
 app.use(cors());
 app.use(express.json());
 
+// Route: /api/profile2?symbol=${symbol}
+app.get('/api/profile2', async (req, res) => {
+    try {
+        const symbol = req.query.symbol.toUpperCase();
+
+        if (!symbol) {
+            return res.status(400).json({ error: 'parameters is required.' });
+        }
+
+        const api = `https://finnhub.io/api/v1/stock/profile2?symbol=${symbol}&token=${FINNHUB_API_KEY}`;
+        console.log(api);
+        const response = await axios.get(api);
+        res.json(response.data);
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'An error occurred while fetching data.' });
+    }
+});
+
+// Route: /api/quote?symbol=${symbol}
+app.get('/api/quote', async (req, res) => {
+    try {
+        const symbol = req.query.symbol.toUpperCase();
+
+        if (!symbol) {
+            return res.status(400).json({ error: 'parameters is required.' });
+        }
+
+        const api = `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${FINNHUB_API_KEY}`;
+        console.log(api);
+        const response = await axios.get(api);
+        res.json(response.data);
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'An error occurred while fetching data.' });
+    }
+});
+
+// Route: /api/insider-sentiment?symbol=${symbol}
+app.get('/api/insider-sentiment', async (req, res) => {
+    try {
+        const symbol = req.query.symbol.toUpperCase();
+
+        if (!symbol) {
+            return res.status(400).json({ error: 'parameters is required.' });
+        }
+
+        const api = `https://finnhub.io/api/v1/stock/insider-sentiment?symbol=${symbol}&from=2022-01-01&token=${FINNHUB_API_KEY}`;
+        console.log(api);
+        const response = await axios.get(api);
+        res.json(response.data);
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'An error occurred while fetching data.' });
+    }
+});
+
+// Route: /api/recommendation?symbol=${symbol}
+app.get('/api/recommendation', async (req, res) => {
+    try {
+        const symbol = req.query.symbol.toUpperCase();
+
+        if (!symbol) {
+            return res.status(400).json({ error: 'parameters is required.' });
+        }
+
+        const api = `https://finnhub.io/api/v1/stock/recommendation?symbol=${symbol}&token=${FINNHUB_API_KEY}`;
+        console.log(api);
+        const response = await axios.get(api);
+        res.json(response.data);
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'An error occurred while fetching data.' });
+    }
+});
+
+// Route: /api/earnings?symbol=${symbol}
+app.get('/api/earnings', async (req, res) => {
+    try {
+        const symbol = req.query.symbol.toUpperCase();
+
+        if (!symbol) {
+            return res.status(400).json({ error: 'parameters is required.' });
+        }
+
+        const api = `https://finnhub.io/api/v1/stock/earnings?symbol=${symbol}&token=${FINNHUB_API_KEY}`;
+        console.log(api);
+        const response = await axios.get(api);
+        res.json(response.data);
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'An error occurred while fetching data.' });
+    }
+});
+
+// Route: /api/news?symbol=${symbol}&from=${from}&to=${to}
+app.get('/api/news', async (req, res) => {
+    try {
+        const symbol = req.query.symbol.toUpperCase();
+        const from = req.query.from;
+        const to = req.query.to;
+
+        if (!symbol || !from || !to) {
+            return res.status(400).json({ error: 'parameters is required.' });
+        }
+
+        const api = `https://finnhub.io/api/v1/company-news?symbol=${symbol}&from=${from}&to=${to}&token=${FINNHUB_API_KEY}`;
+        console.log(api);
+        const response = await axios.get(api);
+        res.json(response.data);
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'An error occurred while fetching data.' });
+    }
+});
+
+// Route: /api/peers?symbol=AAPL
+app.get('/api/peers', async (req, res) => {
+    try {
+        const symbol = req.query.symbol.toUpperCase();
+        console.log(`peers: symbol:${symbol}`);
+
+        if (!symbol) {
+            return res.status(400).json({ error: 'symbol parameter is required.' });
+        }
+        const api = `https://finnhub.io/api/v1/stock/peers?symbol=${symbol}&token=${FINNHUB_API_KEY}`;
+        const response = await axios.get(api);
+        res.json(response.data);
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'An error occurred while fetching data.' });
+    }
+});
+
 app.get('/api/portfolio/get', async (req, res) => {
     let client;
     try {
