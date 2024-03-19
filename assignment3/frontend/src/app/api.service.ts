@@ -22,7 +22,7 @@ export class ApiService {
 
   SendPeers(symbol:String) {
     symbol = symbol.toUpperCase();
-    const api = `https://finnhub.io/api/v1/stock/peers?symbol=${symbol}&token=${this.FINNHUB_API_KEY}`;
+    const api = `https://csci-571-assignment3-416903.uw.r.appspot.com/api/peers?symbol=${symbol}`;
     console.log(`call api: ${api}`);
     return this.http.get<any>(api);
   }
@@ -35,27 +35,28 @@ export class ApiService {
     from.setDate(from.getDate() - 30);
     const FROM: string = this.formatDate(from);
     const TO: string = this.formatDate(today);
-    const api = `https://finnhub.io/api/v1/company-news?symbol=${symbol}&from=${FROM}&to=${TO}&token=${this.FINNHUB_API_KEY}`;
+    const api = `https://csci-571-assignment3-416903.uw.r.appspot.com/api/news?symbol=${symbol}&from=${FROM}&to=${TO}`;
+    console.log(`call api: ${api}`);
     return this.http.get<any>(api);
   }
 
   SendHistoricalEPS(symbol:String) {
     symbol = symbol.toUpperCase();
-    const api = `https://finnhub.io/api/v1/stock/earnings?symbol=${symbol}&token=${this.FINNHUB_API_KEY}`;
+    const api = `https://csci-571-assignment3-416903.uw.r.appspot.com/api/earnings?symbol=${symbol}`;
     console.log(`call api: ${api}`);
     return this.http.get<any>(api);
   }
 
   SendRecommendationTrends(symbol:String) {
     symbol = symbol.toUpperCase();
-    const api = `https://finnhub.io/api/v1/stock/recommendation?symbol=${symbol}&token=${this.FINNHUB_API_KEY}`;
+    const api = `https://csci-571-assignment3-416903.uw.r.appspot.com/api/recommendation?symbol=${symbol}`;
     console.log(`call api: ${api}`);
     return this.http.get<any>(api);
   }
 
   SendInsiderSentiment(symbol:String) {
     symbol = symbol.toUpperCase();
-    const api = `https://finnhub.io/api/v1/stock/insider-sentiment?symbol=${symbol}&from=2022-01-01&token=${this.FINNHUB_API_KEY}`;
+    const api = `https://csci-571-assignment3-416903.uw.r.appspot.com/api/insider-sentiment?symbol=${symbol}`;
     console.log(`call api: ${api}`);
     return this.http.get<any>(api);
   }
@@ -63,15 +64,15 @@ export class ApiService {
   SendQuote(symbol:String) {
     // FIXME
     symbol = symbol.toUpperCase();
-    const api = `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${this.FINNHUB_API_KEY}`;
+    const api = `https://csci-571-assignment3-416903.uw.r.appspot.com/api/quote?symbol=${symbol}`;
     console.log(`call api: ${api}`);
     return this.http.get<any>(api);
   }
 
   SendProfile2(symbol:String){
     // FIXME
-    symbol = symbol.toUpperCase();
-    return this.http.get<any>(`https://finnhub.io/api/v1/stock/profile2?symbol=${symbol}&token=${this.FINNHUB_API_KEY}`);
+    const api = `https://csci-571-assignment3-416903.uw.r.appspot.com/api/profile2?symbol=${symbol}`;
+    return this.http.get<any>(api);
   }
 
   SendWatchlistGet() {
