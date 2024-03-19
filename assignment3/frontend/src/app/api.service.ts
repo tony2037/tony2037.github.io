@@ -7,10 +7,6 @@ import { tick } from '@angular/core/testing';
 })
 export class ApiService {
 
-  private POLYGON_API_KEY = "REDACTED_POLYGON_KEY";
-  private POLYGON_API_KEY_v2 = "sxcDyjdA5nxbhxVzWkd154nqyLWKjk2C";
-  private FINNHUB_API_KEY = "REDACTED_FINNHUB_KEY";
-
   constructor(private http: HttpClient) { }
 
   formatDate(date: Date): string {

@@ -543,7 +543,7 @@ export class DetailsComponent implements OnInit , OnDestroy {
     const FROM_STRING = this.formatDate(FROM);
     const TO_STRING = this.formatDate(TO);
 
-    const api = `https://api.polygon.io/v2/aggs/ticker/${symbol}/range/1/hour/${FROM_STRING}/${TO_STRING}?adjusted=true&sort=asc&apiKey=${this.POLYGON_API_KEY_v2}`;
+    const api = `https://csci-571-assignment3-416903.uw.r.appspot.com/api/SendAggsHourly?symbol=${symbol}&from=${FROM_STRING}&to=${TO_STRING}`;
     console.log(`call api: ${api}`);
     return this.http.get<any>(api);
   }
@@ -555,7 +555,8 @@ export class DetailsComponent implements OnInit , OnDestroy {
     const TO = TODAY;
     const FROM_STRING = this.formatDate(FROM);
     const TO_STRING = this.formatDate(TO);
-    const api = `https://api.polygon.io/v2/aggs/ticker/${symbol}/range/1/day/${FROM_STRING}/${TO_STRING}?adjusted=true&sort=asc&apiKey=${this.POLYGON_API_KEY}`;
+
+    const api = `https://csci-571-assignment3-416903.uw.r.appspot.com/api/SendAggs?symbol=${symbol}&from=${FROM_STRING}&to=${TO_STRING}`;
     console.log(`call api: ${api}`);
     return this.http.get<any>(api);
   }
