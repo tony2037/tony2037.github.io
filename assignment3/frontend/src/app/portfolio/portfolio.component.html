@@ -1,6 +1,6 @@
 <div class="container">
     <div style="margin-top: 3em;" class="row"><h3>My Portfolio</h3></div>
-    <div class="row"><p style="font-size: medium;">Money in the Wallet: ${{ cash }}</p></div>
+    <div class="row"><p style="font-size: medium;">Money in the Wallet: ${{ cash.toFixed(2) }}</p></div>
     <div class="row">
         <div style="margin-top: 1em;" *ngFor="let stock of stocks" class="col-8">
             <div class="card">
