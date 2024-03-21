@@ -132,9 +132,7 @@ export class DetailsComponent implements OnInit , OnDestroy {
         this.currentSecond = this.formatTimestamp(this.currentTimestamp, false);
         this.lastTimeStamp = data.t;
         this.lastDay = this.formatTimestamp(this.lastTimeStamp, true);
-        const diffInSeconds = this.lastTimeStamp-this.currentTimestamp;
-        const diffInHours = diffInSeconds / 3600;
-        this.marketStatus = diffInHours < 3;
+        this.marketStatus = this.isMarketOpen();
       }
     });
 
@@ -168,6 +166,20 @@ export class DetailsComponent implements OnInit , OnDestroy {
     this.spinner = false;
     this.success = false;
     console.log('fail callbcak');
+  }
+
+  isMarketOpen() :boolean {
+    const currentDateTime = new Date();
+    currentDateTime.setHours(currentDateTime.getHours() - 4);
+
+    const marketOpenTime = new Date(currentDateTime);
+    marketOpenTime.setHours(9, 30, 0, 0);
+    const marketCloseTime = new Date(currentDateTime);
+    marketCloseTime.setHours(16, 0, 0, 0);
+
+    const diffInSeconds = (currentDateTime.getTime() - marketOpenTime.getTime()) / 1000;
+
+    return diffInSeconds >= 0 && diffInSeconds <= (marketCloseTime.getTime() - marketOpenTime.getTime()) / 1000;
   }
 
   buildPortfolio() {
