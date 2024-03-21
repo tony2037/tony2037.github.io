@@ -133,6 +133,7 @@ export class DetailsComponent implements OnInit , OnDestroy {
         this.lastTimeStamp = data.t;
         this.lastDay = this.formatTimestamp(this.lastTimeStamp, true);
         this.marketStatus = this.isMarketOpen();
+        this.changeColor(this.change);
       }
     });
 
@@ -166,6 +167,14 @@ export class DetailsComponent implements OnInit , OnDestroy {
     this.spinner = false;
     this.success = false;
     console.log('fail callbcak');
+  }
+
+  changeColor(change: number) {
+    const elements = document.getElementsByClassName('price-color');
+    for (let i = 0; i < elements.length; i++) {
+      const element = elements[i] as HTMLElement;
+      element.style.color = change >= 0 ? 'green' : 'red';
+    }
   }
 
   isMarketOpen() :boolean {
