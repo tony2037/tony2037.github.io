@@ -115,26 +115,19 @@ export class DetailsComponent implements OnInit , OnDestroy {
     });
 
     this.apiService.SendQuote(this.ticker).subscribe((data) => {
-      const keys = Object.keys(data);
-      if (keys.length == 0) {
-        this.failCallback();
-      }
-      else {
-        this.successCallback();
-        this.lastPrice = data.c;
-        this.change = data.d;
-        this.changePercentage = parseFloat(data.dp.toFixed(2));
-        this.highPrice = data.h;
-        this.lowPrice = data.l;
-        this.openPrice = data.o;
-        this.closePrice = data.pc;
-        this.currentTimestamp = Math.floor(Date.now() / 1000);
-        this.currentSecond = this.formatTimestamp(this.currentTimestamp, false);
-        this.lastTimeStamp = data.t;
-        this.lastDay = this.formatTimestamp(this.lastTimeStamp, true);
-        this.marketStatus = this.isMarketOpen();
-        this.changeColor(this.change);
-      }
+      this.lastPrice = data.c;
+      this.change = data.d;
+      this.changePercentage = parseFloat(data.dp.toFixed(2));
+      this.highPrice = data.h;
+      this.lowPrice = data.l;
+      this.openPrice = data.o;
+      this.closePrice = data.pc;
+      this.currentTimestamp = Math.floor(Date.now() / 1000);
+      this.currentSecond = this.formatTimestamp(this.currentTimestamp, false);
+      this.lastTimeStamp = data.t;
+      this.lastDay = this.formatTimestamp(this.lastTimeStamp, true);
+      this.marketStatus = this.isMarketOpen();
+      this.changeColor(this.change);
     });
 
     this.apiService.SendPeers(this.ticker).subscribe((data) => {
@@ -363,9 +356,6 @@ export class DetailsComponent implements OnInit , OnDestroy {
         this.estimateData.push(entry.estimate);
         customxLabels.push(`${entry.period}\nSurprise: ${entry.surprise}`);
       }
-
-      console.log(`actualData: ${this.actualData}`);
-      console.log(this.actualData);
 
       this.historicalEPSChartOption = {
         chart: {
