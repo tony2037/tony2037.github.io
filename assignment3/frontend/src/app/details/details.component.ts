@@ -152,7 +152,21 @@ export class DetailsComponent implements OnInit , OnDestroy {
 
   ngOnInit(): void {
     this.subscription = this.updateTimer.subscribe(() => {
-      console.log('Fixme');
+      this.apiService.SendQuote(this.ticker).subscribe((data) => {
+        this.lastPrice = data.c;
+        this.change = data.d;
+        this.changePercentage = parseFloat(data.dp.toFixed(2));
+        this.highPrice = data.h;
+        this.lowPrice = data.l;
+        this.openPrice = data.o;
+        this.closePrice = data.pc;
+        this.currentTimestamp = Math.floor(Date.now() / 1000);
+        this.currentSecond = this.formatTimestamp(this.currentTimestamp, false);
+        this.lastTimeStamp = data.t;
+        this.lastDay = this.formatTimestamp(this.lastTimeStamp, true);
+        this.isMarketOpen();
+        this.changeColor(this.change);
+      });
     });
   }
 
