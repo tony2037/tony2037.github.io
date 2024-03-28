@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
 import { ModalDismissReasons, NgbDatepickerModule, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ApiService } from '../api.service';
+import { Subscription, Observable, timer} from 'rxjs';
 
 import * as Highcharts from 'highcharts/highstock';
 import IndicatorsCore from 'highcharts/indicators/indicators';
@@ -83,6 +84,8 @@ export class DetailsComponent implements OnInit , OnDestroy {
   isWatched :boolean = false;
   cash :number = 0;
   quantity :number = 0;
+  subscription!: Subscription;
+  updateTimer: Observable<number> = timer(0, 15000);
 
   @ViewChild('num') num: any;
 
@@ -144,10 +147,13 @@ export class DetailsComponent implements OnInit , OnDestroy {
   }
 
   ngOnDestroy(): void {
-
+    this.subscription.unsubscribe();
   }
 
   ngOnInit(): void {
+    this.subscription = this.updateTimer.subscribe(() => {
+      console.log('Fixme');
+    });
   }
 
   successCallback() {
