@@ -68,7 +68,7 @@ export class SearchComponent implements OnInit {
   }
 
   search(): void {
-    const stockCode = this.stockCodeControl.value.toUpperCase();
+    const stockCode = this.stockCodeControl.value ? this.stockCodeControl.value.toUpperCase() : '';
     // Perform search action using stockCode
     console.log('Searching for stock:', stockCode);
     this.router.navigate(['/search', stockCode])
