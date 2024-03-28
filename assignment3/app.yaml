@@ -4,7 +4,7 @@ handlers:
   - url: /api/.*
     script: auto
 
-  - url: /.*
+  - url: /
     static_files: frontend/dist/frontend/browser/index.html
     upload: frontend/dist/frontend/browser/index.html
 
