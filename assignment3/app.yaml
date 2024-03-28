@@ -4,9 +4,19 @@ handlers:
   - url: /api/.*
     script: auto
 
-  - url: /(.*\.(css|js|gif|jpg|jpeg|png|ico|json|svg|woff|woff2|ttf|eot))
+  - url: /(.*\.js)
     static_files: frontend/dist/frontend/browser/\1
-    upload: frontend/dist/frontend/browser/(.*\.(css|js|gif|jpg|jpeg|png|ico|json|svg|woff|woff2|ttf|eot))
+    upload: frontend/dist/frontend/browser/(.*\.js)
+    mime_type: application/javascript
+
+  - url: /(.*\.css)
+    static_files: frontend/dist/frontend/browser/\1
+    upload: frontend/dist/frontend/browser/(.*\.css)
+    mime_type: text/css
+
+  - url: /(.*\.(gif|jpg|jpeg|png|ico|json|svg|woff|woff2|ttf|eot))
+    static_files: frontend/dist/frontend/browser/\1
+    upload: frontend/dist/frontend/browser/(.*\.(gif|jpg|jpeg|png|ico|json|svg|woff|woff2|ttf|eot))
     mime_type: text/plain
 
   - url: /.*
