@@ -33,6 +33,7 @@ interface AutocompleteOptions {
 export class SearchComponent implements OnInit {
   stockCodeControl = new FormControl();
   filteredOptions: StockOption[] = [];
+  isLoading: boolean = false;
 
   constructor(private router : Router, private http: HttpClient) { }
 
@@ -50,8 +51,10 @@ export class SearchComponent implements OnInit {
 
   searchStockOptions(query: string): void {
     query = query.toUpperCase();
+    this.isLoading = true;
     this.http.get<AutocompleteOptions>(`/api/autocomplete?query=${query}`)
       .subscribe(options => {
+        this.isLoading = true;
         this.filteredOptions = [];
         let count = options.count;
 

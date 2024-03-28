@@ -20,6 +20,9 @@
           <mat-option *ngFor="let option of filteredOptions" [value]="option.symbol">
             {{ option.symbol }} - {{ option.description }}
           </mat-option>
+          <mat-option *ngIf="isLoading" class="loading-spinner">
+            <mat-spinner diameter="30"></mat-spinner>
+          </mat-option>
         </mat-autocomplete>
       </form>
     </div>
