@@ -4,12 +4,15 @@ handlers:
   - url: /api/.*
     script: auto
 
-  - url: /
+  - url: /(.*\.(css|js|gif|jpg|jpeg|png|ico|json|svg|woff|woff2|ttf|eot))
+    static_files: frontend/dist/frontend/browser/\1
+    upload: frontend/dist/frontend/browser/(.*\.(css|js|gif|jpg|jpeg|png|ico|json|svg|woff|woff2|ttf|eot))
+    mime_type: text/plain
+
+  - url: /.*
     static_files: frontend/dist/frontend/browser/index.html
     upload: frontend/dist/frontend/browser/index.html
 
-  - url: /
-    static_dir: frontend/dist/frontend/browser
-
 env_variables:
   PORT: 8080
+
