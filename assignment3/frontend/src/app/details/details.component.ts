@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
 import { ModalDismissReasons, NgbDatepickerModule, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ApiService } from '../api.service';
-import { Subscription, Observable, timer} from 'rxjs';
+import { Subscription, Observable, timer, forkJoin} from 'rxjs';
 
 import * as Highcharts from 'highcharts/highstock';
 import IndicatorsCore from 'highcharts/indicators/indicators';
@@ -129,7 +129,7 @@ export class DetailsComponent implements OnInit , OnDestroy {
       this.currentSecond = this.formatTimestamp(this.currentTimestamp, false);
       this.lastTimeStamp = data.t;
       this.lastDay = this.formatTimestamp(this.lastTimeStamp, true);
-      this.marketStatus = this.isMarketOpen();
+      this.isMarketOpen();
       this.changeColor(this.change);
     });
 
@@ -176,18 +176,10 @@ export class DetailsComponent implements OnInit , OnDestroy {
     }
   }
 
-  isMarketOpen() :boolean {
-    const currentDateTime = new Date();
-    currentDateTime.setHours(currentDateTime.getHours() - 4);
-
-    const marketOpenTime = new Date(currentDateTime);
-    marketOpenTime.setHours(9, 30, 0, 0);
-    const marketCloseTime = new Date(currentDateTime);
-    marketCloseTime.setHours(16, 0, 0, 0);
-
-    const diffInSeconds = (currentDateTime.getTime() - marketOpenTime.getTime()) / 1000;
-
-    return diffInSeconds >= 0 && diffInSeconds <= (marketCloseTime.getTime() - marketOpenTime.getTime()) / 1000;
+  isMarketOpen() {
+   this.apiService.SendMarketStatus().subscribe((data) => {
+    this.marketStatus = data.isOpen;
+   });
   }
 
   buildPortfolio() {

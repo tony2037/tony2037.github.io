@@ -16,6 +16,12 @@ export class ApiService {
     return `${year}-${month}-${day}`;
   }
 
+  SendMarketStatus() {
+    const api = `https://csci-571-assignment3-416903.uw.r.appspot.com/api/market-status`;
+    console.log(`call api: ${api}`);
+    return this.http.get<any>(api);
+  }
+
   SendPeers(symbol:String) {
     symbol = symbol.toUpperCase();
     const api = `https://csci-571-assignment3-416903.uw.r.appspot.com/api/peers?symbol=${symbol}`;
