@@ -76,5 +76,6 @@ export class SearchComponent implements OnInit {
 
   clear(): void {
     this.stockCodeControl.reset();
+    this.router.navigate(['/']);
   }
 }
