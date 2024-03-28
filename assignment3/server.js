@@ -18,6 +18,19 @@ const collectionPortfolio = 'portfolio';
 app.use(cors());
 app.use(express.json());
 
+// Route: /api/market-status
+app.get('/api/market-status', async (req, res) => {
+    try {
+        const api = `https://finnhub.io/api/v1/stock/market-status?exchange=US&token=${FINNHUB_API_KEY}`;
+        console.log(api);
+        const response = await axios.get(api);
+        res.json(response.data);
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'An error occurred while fetching data.' });
+    }
+});
+
 // Route: /api/SendAggs?symbol=aapl&from=2022-03-18&to=2024-03-18
 app.get('/api/SendAggs', async (req, res) => {
     try {
