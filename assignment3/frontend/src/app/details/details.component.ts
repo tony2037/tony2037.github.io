@@ -5,6 +5,7 @@ import { DatePipe } from '@angular/common';
 import { ModalDismissReasons, NgbDatepickerModule, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ApiService } from '../api.service';
 import { Subscription, Observable, timer, forkJoin} from 'rxjs';
+import { SearchService } from '../search-service.service';
 
 import * as Highcharts from 'highcharts/highstock';
 import IndicatorsCore from 'highcharts/indicators/indicators';
@@ -92,7 +93,7 @@ export class DetailsComponent implements OnInit , OnDestroy {
   constructor(private router: Router, private route:ActivatedRoute, 
     private http:HttpClient, private modalService: NgbModal,
     private datePipe: DatePipe, private apiService: ApiService,
-    private cdr: ChangeDetectorRef) {
+    private cdr: ChangeDetectorRef, private searchService: SearchService) {
     this.ticker = this.route.snapshot.paramMap.get('ticker');
     if (!this.ticker) {
       this.failCallback();
@@ -171,6 +172,7 @@ export class DetailsComponent implements OnInit , OnDestroy {
   }
 
   successCallback() {
+    this.searchService.setRecentSearchRoute(this.ticker);
     this.spinner = false;
     this.success = true;
     console.log('success callbcak');

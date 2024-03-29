@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
-import { RouterOutlet } from '@angular/router';
+import { RouterOutlet, Router } from '@angular/router';
+import { SearchService } from './search-service.service';
 
 @Component({
   selector: 'app-root',
@@ -11,6 +12,26 @@ import { RouterOutlet } from '@angular/router';
 export class AppComponent {
   title = 'frontend';
   isCollapsed = true;
+
+  constructor(private searchService: SearchService, private router: Router) {}
+
+  onClickHome() {
+    this.isCollapsed = !this.isCollapsed;
+    let searchButton = document.getElementById('search-button');
+    let watchlistButton = document.getElementById('watchlist-button');
+    let portfolioButton = document.getElementById('portfolio-button');
+    let searchLink = document.getElementById('search-link');
+    let watchlistLink = document.getElementById('watchlist-link');
+    let portfolioLink = document.getElementById('portfolio-link');
+    watchlistButton!.style.border = 'none';
+    portfolioButton!.style.border = 'none';
+    searchButton!.style.border = 'white solid';
+    searchLink!.style.color = 'white';
+    watchlistLink!.removeAttribute('style');
+    portfolioLink!.removeAttribute('style');
+
+    this.searchService.setRecentSearchRoute('home');
+  }
   
   onClickSearch() {
     this.isCollapsed = !this.isCollapsed;
@@ -26,6 +47,10 @@ export class AppComponent {
     searchLink!.style.color = 'white';
     watchlistLink!.removeAttribute('style');
     portfolioLink!.removeAttribute('style');
+
+    let previousRoute = this.searchService.getRecentSearchRoute();
+    console.log(`route back to: ${previousRoute}`);
+    this.router.navigate(['/search/', previousRoute]);
   }
 
   onClickWatchlist() {
