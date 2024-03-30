@@ -16,6 +16,7 @@ interface Stock {
   change: number;
   current_price: number;
   market_value: number;
+  color: string;
 };
 
 @Component({
@@ -70,7 +71,8 @@ export class PortfolioComponent implements OnInit , OnDestroy {
               avg_cost: avg_cost,
               change: change,
               current_price: current_price,
-              market_value: market_value
+              market_value: market_value,
+              color: change >= 0 ? 'green' : 'red'
             });
           })
         ));

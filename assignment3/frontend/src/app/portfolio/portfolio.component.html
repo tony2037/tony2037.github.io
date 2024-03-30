@@ -10,15 +10,30 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-6"><p class="card-text">Quantity: {{ stock.quantity }}</p></div>
-                        <div class="col-6"><p class="card-text">Change: {{ stock.change }}</p></div>
+                        <div class="col-6">
+                            <p class="card-text">
+                                Change: <span><img *ngIf="stock.change >= 0" width="10" height="10" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Green_Arrow_Up.svg/1200px-Green_Arrow_Up.svg.png?20190502180104" alt=""><img *ngIf="stock.change < 0" width="10" height="10" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Red_Arrow_Down.svg/1200px-Red_Arrow_Down.svg.png?20070404214359" alt=""></span>
+                                <span [style.color]="stock.color">{{ stock.change }}</span>
+                            </p>
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-6"><p class="card-text">Avg. Cost / Share: {{ stock.avg_cost }}</p></div>
-                        <div class="col-6"><p class="card-text">Current Price: {{ stock.current_price }}</p></div>
+                        <div class="col-6">
+                            <p class="card-text">
+                                Current Price: <span><img *ngIf="stock.change >= 0" width="10" height="10" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Green_Arrow_Up.svg/1200px-Green_Arrow_Up.svg.png?20190502180104" alt=""><img *ngIf="stock.change < 0" width="10" height="10" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Red_Arrow_Down.svg/1200px-Red_Arrow_Down.svg.png?20070404214359" alt=""></span>
+                                <span [style.color]="stock.color">{{ stock.current_price }}</span>
+                            </p>
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-6"><p class="card-text">Total Cost: {{ stock.total }}</p></div>
-                        <div class="col-6"><p class="card-text">Market Value: {{ stock.market_value }}</p></div>
+                        <div class="col-6">
+                            <p class="card-text">
+                                Market Value: <span><img *ngIf="stock.change >= 0" width="10" height="10" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Green_Arrow_Up.svg/1200px-Green_Arrow_Up.svg.png?20190502180104" alt=""><img *ngIf="stock.change < 0" width="10" height="10" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Red_Arrow_Down.svg/1200px-Red_Arrow_Down.svg.png?20070404214359" alt=""></span>
+                                <span [style.color]="stock.color">{{ stock.market_value }}</span>
+                            </p>
+                        </div>
                     </div>
                 </div>
                 <div class="card-footer">
