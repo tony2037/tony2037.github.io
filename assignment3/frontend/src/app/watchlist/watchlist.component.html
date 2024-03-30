@@ -17,7 +17,7 @@
                     <div (click)="onClickCard(stock.ticker)" class="card-body">
                         <div class="row">
                             <div class="col-6"><h5 class="card-title">{{ stock.ticker }}</h5></div>
-                            <div class="col-6"><p class="card-text">{{ stock.price }}</p></div>
+                            <div class="col-6"><p class="card-text" [ngClass]="{'text-success': stock.change >= 0, 'text-danger': stock.change < 0}">{{ stock.price }}</p></div>
                         </div>
                         <div class="row">
                             <div class="col-6"><h6 class="card-subtitle mb-2">{{ stock.companyName }}</h6></div>
