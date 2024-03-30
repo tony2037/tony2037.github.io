@@ -16,7 +16,7 @@
             <mat-icon>clear</mat-icon>
           </button>
         </div>
-        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" (optionSelected)="selectOption($event)">
           <mat-option *ngFor="let option of filteredOptions" [value]="option.symbol">
             {{ option.symbol }} - {{ option.description }}
           </mat-option>

@@ -83,4 +83,9 @@ export class SearchComponent implements OnInit {
     this.searchService.setRecentSearchRoute('home');
     this.router.navigate(['/']);
   }
+
+  selectOption(event: any): void {
+    const ticker = event.option.value;
+    this.search();
+  }
 }
