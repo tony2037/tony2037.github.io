@@ -85,7 +85,7 @@
             <div class="col-4" style="display: grid; place-items: center;"><img height="100" [src]="logoUrl" alt="Company Logo"></div>    
             <div class="col-4">
                 <div style="text-align: center;" class="row">
-                    <h4 class="price-color" style="color: red;"> {{lastPrice}} </h4>
+                    <h4 class="price-color" style="color: red;"> <span><img *ngIf="change >= 0" width="10" height="10" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Green_Arrow_Up.svg/1200px-Green_Arrow_Up.svg.png?20190502180104" alt=""><img *ngIf="change < 0" width="10" height="10" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Red_Arrow_Down.svg/1200px-Red_Arrow_Down.svg.png?20070404214359" alt=""></span> {{lastPrice}} </h4>
                     <h5 class="price-color" style="color: red;"> {{change}} ({{changePercentage}}%) </h5>
                     <p style="color: gray;"> {{currentSecond}} </p>
                 </div>
