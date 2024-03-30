@@ -7,6 +7,7 @@ import {map, startWith} from 'rxjs/operators';
 import {AsyncPipe} from '@angular/common';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { SearchService } from '../search-service.service';
 
 interface StockOption {
   symbol: string;
@@ -35,7 +36,7 @@ export class SearchComponent implements OnInit {
   filteredOptions: StockOption[] = [];
   isLoading: boolean = false;
 
-  constructor(private router : Router, private http: HttpClient) { }
+  constructor(private router : Router, private http: HttpClient, private searchService: SearchService) { }
 
   ngOnInit(): void {
     this.stockCodeControl.valueChanges
@@ -79,6 +80,7 @@ export class SearchComponent implements OnInit {
 
   clear(): void {
     this.stockCodeControl.reset();
+    this.searchService.setRecentSearchRoute('home');
     this.router.navigate(['/']);
   }
 }
