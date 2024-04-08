@@ -221,6 +221,13 @@ app.get('/api/portfolio/get', async (req, res) => {
         const db = client.db(dbName);
         const collection = db.collection(collectionPortfolio);
         const result = await collection.findOne({});
+        for (var ticker in result["stocks"]) {
+            const api = `https://finnhub.io/api/v1/quote?symbol=${ticker}&token=${FINNHUB_API_KEY}`;
+            const quoteResponse = await axios.get(api);
+            const quote = quoteResponse.data;
+            result["stocks"][ticker]["c"] = quote["c"];
+            result["stocks"][ticker]["d"] = quote["d"];
+        }
         res.json(result);
     } catch (error) {
         console.error('Error:', error);
