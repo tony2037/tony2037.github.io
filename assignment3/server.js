@@ -239,6 +239,48 @@ app.get('/api/portfolio/get', async (req, res) => {
     }
 });
 
+// Route: /api/portfolio/ticker?ticker=AAPL
+app.get('/api/portfolio/ticker', async (req, res) => {
+    const ticker = req.query.ticker.toUpperCase();
+    let client;
+    try {
+        ans = {}
+        client = new MongoClient(uri, {
+            serverApi: {
+                version: '1',
+                strict: true,
+                deprecationErrors: true,
+            }
+        });
+        await client.connect();
+        const db = client.db(dbName);
+        const collection = db.collection(collectionPortfolio);
+        const result = await collection.findOne({});
+        if (!(ticker in result["stocks"])) {
+            ans["shares"] = 0
+        }
+        else {
+            const api = `https://finnhub.io/api/v1/quote?symbol=${ticker}&token=${FINNHUB_API_KEY}`;
+            const quoteResponse = await axios.get(api);
+            const quote = quoteResponse.data;
+            ans["shares"] = result["stocks"][ticker]["quantity"];
+            ans["total"] = result["stocks"][ticker]["total"];
+            ans["avg"] = ans["total"] / ans["shares"];
+            ans["market"] = quote["c"];
+            ans["change"] = (ans["market"] - ans["avg"]) * ans["shares"] ;
+            ans["changePercentage"] = (ans["change"] / (ans["total"])) * 100;
+        }
+        res.json(ans);
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'An error occurred while fetching data.' });
+    } finally {
+        if (client) {
+            await client.close();
+        }
+    }
+});
+
 
 app.post('/api/portfolio/init', async (req, res) => {
     try {
