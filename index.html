@@ -1,1 +1,396 @@
-<!doctype html><html lang=""><head><meta charset="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><meta name="viewport" content="width=device-width,initial-scale=1"/><link rel="icon" href="./favicon.png"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/><title>vuejs-tailwindcss-portfolio</title><script defer="defer" src="/js/chunk-vendors.f8fc41bb.js"></script><script defer="defer" src="/js/app.aad4203e.js"></script><link href="/css/app.78cd4f6b.css" rel="stylesheet"></head><body id="app-theme" class="app-theme"><noscript><strong>We're sorry but vuejs-tailwindcss-portfolio doesn't work properly without JavaScript enabled. Please enable it to continue.</strong></noscript><div id="app"></div></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f7f6f2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0f1110" media="(prefers-color-scheme: dark)">
+<title>Yu-Chen (Tony) Liu</title>
+<meta name="description" content="Yu-Chen (Tony) Liu, systems software engineer at NVIDIA working on GPU bring-up, device memory, and hardware-software interfaces.">
+<meta property="og:title" content="Yu-Chen (Tony) Liu">
+<meta property="og:description" content="Systems software engineer at NVIDIA. GPU bring-up, register addressing, PCIe / SR-IOV, LLVM, Linux kernel.">
+<link rel="icon" href="./favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f7f6f2; --surface:#ffffff; --text:#1d1d1b; --muted:#5d5d57; --faint:#7d7d75;
+  --line:#e3e1d9; --accent:#4d7c0f; --accent-soft:#ecf3df;
+  --gutter:clamp(16px,5vw,48px); --topbar:52px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f1110; --surface:#161917; --text:#e8e9e4; --muted:#a3a69d; --faint:#7f837b;
+    --line:#262a27; --accent:#a3e635; --accent-soft:#1f2a14;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f1110; --surface:#161917; --text:#e8e9e4; --muted:#a3a69d; --faint:#7f837b;
+  --line:#262a27; --accent:#a3e635; --accent-soft:#1f2a14;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--muted);font:clamp(15px,.35vw + 14px,17px)/1.65 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:var(--text);text-decoration:none;overflow-wrap:anywhere}
+a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+code{font:.88em 'IBM Plex Mono',monospace;overflow-wrap:anywhere}
+.mono{font-family:'IBM Plex Mono',ui-monospace,monospace}
+
+/* ---------- mobile / tablet top bar ---------- */
+.topbar{position:sticky;top:0;z-index:10;height:var(--topbar);display:flex;align-items:center;gap:16px;
+  padding:0 max(var(--gutter),env(safe-area-inset-left)) 0 max(var(--gutter),env(safe-area-inset-left));
+  background:color-mix(in srgb,var(--bg) 85%,transparent);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.topbar .brand{font:600 .9rem/1 Inter,sans-serif;color:var(--text);white-space:nowrap}
+.topnav{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;mask-image:linear-gradient(90deg,#000 85%,transparent)}
+.topnav::-webkit-scrollbar{display:none}
+.topnav a{flex:none;font:500 .72rem/1 'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.08em;color:var(--faint);padding:10px 10px;border-radius:999px;min-height:36px;display:flex;align-items:center}
+.topnav a.active{color:var(--text);background:var(--accent-soft)}
+
+/* ---------- layout ---------- */
+.wrap{max-width:760px;margin:0 auto;padding:0 max(var(--gutter),env(safe-area-inset-right)) 0 max(var(--gutter),env(safe-area-inset-left))}
+header{padding:clamp(40px,8vw,72px) 0 8px}
+h1{color:var(--text);font-size:clamp(2rem,6vw,3rem);line-height:1.1;margin:0;letter-spacing:-.02em;font-weight:700}
+.role{color:var(--text);font-size:clamp(1.02rem,2.2vw,1.2rem);font-weight:500;margin:12px 0 0}
+.tagline{max-width:28rem;margin:14px 0 0}
+.sidenav{display:none}
+.links{display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px;margin-top:24px}
+.social{display:flex;flex-wrap:wrap;gap:4px}
+.social a{font:500 .85rem/1 'IBM Plex Mono',monospace;color:var(--muted);padding:12px 10px;margin-left:-10px;min-height:44px;display:inline-flex;align-items:center}
+.theme{background:none;border:1px solid var(--line);color:var(--muted);border-radius:8px;padding:0 12px;min-height:36px;font:500 .75rem 'IBM Plex Mono',monospace;cursor:pointer}
+main{padding:32px 0 72px;min-width:0}
+section{margin-bottom:clamp(64px,10vw,96px);scroll-margin-top:calc(var(--topbar) + 16px)}
+.sec-title{font:500 .78rem/1 'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.12em;color:var(--text);margin:0 0 20px}
+p{margin:0 0 16px}
+strong{color:var(--text);font-weight:600}
+
+.item{display:grid;grid-template-columns:minmax(0,1fr);gap:4px;padding:18px 0;border-top:1px solid var(--line)}
+.item:first-of-type{border-top:0;padding-top:0}
+.item>div{min-width:0}
+.when{font:500 .72rem/1.9 'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.04em;color:var(--faint)}
+.item h3{margin:0;color:var(--text);font-size:1rem;font-weight:600;line-height:1.4}
+.item h3 .sub{display:block;color:var(--muted);font-weight:400;font-size:.95rem}
+.item ul{margin:10px 0 0;padding-left:18px}
+.item li{margin:7px 0;font-size:.95rem}
+.item li::marker{color:var(--faint)}
+.item .desc{margin:8px 0 0;font-size:.95rem}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px!important;padding:0!important;list-style:none}
+.chips li{margin:0!important;font:500 .7rem/1 'IBM Plex Mono',monospace!important;color:var(--accent);background:var(--accent-soft);padding:6px 10px;border-radius:999px}
+.metric{color:var(--accent);font-weight:600;white-space:nowrap}
+.arrow{display:inline-block;transition:transform .2s}
+.skills{display:grid;gap:14px;margin:0}
+.skills div{display:grid;grid-template-columns:minmax(0,1fr);gap:2px}
+.skills dt{font:500 .72rem/1.9 'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.04em;color:var(--faint)}
+.skills dd{margin:0;font-size:.95rem}
+footer{font-size:.85rem;color:var(--faint);max-width:28rem;padding-bottom:env(safe-area-inset-bottom)}
+
+/* ---------- tablet+ : date column beside content ---------- */
+@media (min-width:640px){
+  .item,.skills div{grid-template-columns:132px minmax(0,1fr);gap:24px}
+}
+
+/* ---------- desktop : two-column with sticky intro ---------- */
+@media (min-width:1024px){
+  .topbar{display:none}
+  .wrap{max-width:1200px;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(48px,5vw,96px)}
+  header{position:sticky;top:0;height:100vh;height:100dvh;display:flex;flex-direction:column;justify-content:space-between;padding:clamp(56px,10vh,96px) 0}
+  .sidenav{display:block;margin-top:clamp(32px,6vh,56px)}
+  .sidenav a{display:flex;align-items:center;gap:14px;padding:9px 0;font:500 .76rem/1 'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.12em;color:var(--faint);width:max-content}
+  .sidenav a::before{content:"";width:28px;height:1px;background:var(--faint);transition:width .2s,background .2s}
+  .sidenav a.active{color:var(--text)}
+  .sidenav a.active::before{width:60px;background:var(--text)}
+  .links{flex-direction:column;align-items:flex-start;gap:12px}
+  main{padding:clamp(56px,10vh,96px) 0}
+  section{scroll-margin-top:96px}
+  .item{padding:20px;margin:0 -20px 8px;border:1px solid transparent;border-radius:12px;transition:background .2s,border-color .2s}
+  .item:first-of-type{padding-top:20px}
+}
+/* short landscape screens: don't pin a 100vh column */
+@media (min-width:1024px) and (max-height:640px){
+  header{position:static;height:auto}
+}
+@media (min-width:1600px){
+  .wrap{max-width:1320px}
+}
+
+/* ---------- pointer devices only: hover effects ---------- */
+@media (hover:hover) and (pointer:fine){
+  a:hover,.social a:hover{color:var(--accent)}
+  a:hover .arrow{transform:translate(3px,-3px)}
+  .sidenav a:hover{color:var(--text)}
+  .sidenav a:hover::before{width:60px;background:var(--text)}
+  .theme:hover{color:var(--text);border-color:var(--faint)}
+}
+@media (hover:hover) and (pointer:fine) and (min-width:1024px){
+  .item:hover{background:var(--surface);border-color:var(--line)}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *{transition:none!important}
+}
+@media print{
+  :root{--bg:#fff;--text:#000;--muted:#222;--faint:#555;--accent:#000;--accent-soft:#fff}
+  .topbar,.sidenav,.theme,footer{display:none}
+  .wrap{display:block;max-width:none}
+  header{position:static;height:auto;padding:0 0 12px}
+  section{margin-bottom:24px;break-inside:avoid-page}
+  .item{break-inside:avoid}
+  a[href^="http"]::after{content:" (" attr(href) ")";font-size:.75em;color:#555}
+}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a class="brand" href="#top">Tony Liu</a>
+  <nav class="topnav" aria-label="Sections">
+        <a href="#about">About</a>
+        <a href="#experience">Experience</a>
+        <a href="#research">Research</a>
+        <a href="#open-source">Open Source</a>
+        <a href="#projects">Projects</a>
+        <a href="#skills">Skills</a>
+  </nav>
+</div>
+<div class="wrap" id="top">
+  <header>
+    <div>
+      <h1><a href="./">Yu-Chen (Tony) Liu</a></h1>
+      <p class="role">Systems Software Engineer at NVIDIA</p>
+      <p class="tagline">I work where software meets silicon: GPU bring-up, device memory and register addressing, and the debugging that happens before a chip exists.</p>
+      <nav class="sidenav" aria-label="Sections">
+        <a href="#about">About</a>
+        <a href="#experience">Experience</a>
+        <a href="#research">Research</a>
+        <a href="#open-source">Open Source</a>
+        <a href="#projects">Projects</a>
+        <a href="#skills">Skills</a>
+      </nav>
+    </div>
+    <div class="links">
+      <div class="social">
+        <a href="https://github.com/tony2037" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.linkedin.com/in/yu-chen-liu-tony/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="mailto:liulyuch@gmail.com">Email</a>
+      </div>
+      <button class="theme" id="theme" type="button">Toggle theme</button>
+    </div>
+  </header>
+
+  <main>
+    <section id="about">
+      <h2 class="sec-title">About</h2>
+      <p>I'm <strong>Tony (Yu-Chen) Liu</strong>, a Taiwanese engineer living in the U.S. and working as a <strong>System Software Engineer at NVIDIA</strong>.</p>
+      <p>I like to learn from first principles. I want to understand a system all the way down: how hardware and low-level software shape what the infrastructure and application layers above them can do. That curiosity doesn't stop at computers. I enjoy picking up knowledge from any field.</p>
+      <p>Before NVIDIA, I developed <strong>RTOS</strong> software for <strong>RISC-V</strong>-based IoT devices at <strong>Amazon</strong>, worked on silicon emulation projects as an intern at <strong>Apple</strong>, and built <strong>Linux kernel</strong> storage and networking features at <strong>Synology</strong>, including RAID5 read-path tuning and a Netfilter-based network performance module.</p>
+      <p>Lately I've been digging into the AI software stack: <strong>AI accelerator runtimes</strong>, <strong>inference systems</strong>, <strong>compilers</strong>, <strong>agent workflows</strong>, <strong>sandboxes</strong>, and more.</p>
+    </section>
+
+    <section id="experience">
+      <h2 class="sec-title">Experience</h2>
+
+      <div class="item">
+        <div class="when">2025 — Present</div>
+        <div>
+          <h3>System Software Engineer · NVIDIA<span class="sub">GPU Development Tools · Santa Clara, CA</span></h3>
+          <ul>
+            <li>Designed a register-addressing model for multi-die GPUs and delivered <span class="metric">14</span> hardware performance-monitoring register spaces, now used by <span class="metric">444</span> architecture test entries.</li>
+            <li>Root-caused an integer overflow in PCIe BAR sizing that blocked virtual-function initialization on emulation, which unblocked the <strong>first successful VF bring-up</strong>.</li>
+            <li>Drove an SR-IOV/IOMMU failure spanning <span class="metric">3</span> GPU generations to resolution by aligning architecture, driver, and emulation teams. All VFs passed <span class="metric">23 days</span> after escalation, and the driver fix landed in <span class="metric">4</span> branches.</li>
+            <li>Diagnosed a full-chip register-address resolution failure in <span class="metric">55 minutes</span> and shipped the fix in <span class="metric">4 days</span>, validated with functional-model and regression tests instead of waiting on a long RTL rerun.</li>
+            <li>Designed a channel-scoped Python test API for runtime control of GPU cache coalescing, closing <span class="metric">4</span> open interface questions with hardware, driver, and architecture teams within 24 hours.</li>
+            <li>Prototyped an authenticated <strong>MCP</strong> service exposing <span class="metric">7</span> engineering tools, with caller attribution and token management, verified end to end in a test environment.</li>
+          </ul>
+          <ul class="chips"><li>C++</li><li>Python</li><li>PCIe</li><li>SR-IOV</li><li>IOMMU</li><li>Pre-silicon</li><li>MCP</li></ul>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="when">Summer 2024</div>
+        <div>
+          <h3>CPU Emulation Engineer Intern · Apple<span class="sub">Silicon software bring-up · Cupertino, CA</span></h3>
+          <ul>
+            <li>Reverse-engineered and optimized the DRAM address-hashing algorithm for Apple silicon emulation, making memory fetch <span class="metric">20%</span> more efficient.</li>
+            <li>Improved core-dump generation from the FPGA prototyping platform, and resolved a cache-coherency issue so active core dumps could be uploaded in flight.</li>
+          </ul>
+          <ul class="chips"><li>FPGA</li><li>ARM</li><li>Computer Architecture</li></ul>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="when">2023</div>
+        <div>
+          <h3>Researcher · National Taiwan University<span class="sub">Systems security · Taipei, Taiwan</span></h3>
+          <ul>
+            <li>Built an LLVM pass, an ELF loader, and a DWARF <code>.eh_frame</code> stack unwinder that validate each sensitive system call's path back to <code>main()</code>, enforcing backward-edge control-flow integrity on Arm. This work became <a href="#research">Scynteg</a>.</li>
+          </ul>
+          <ul class="chips"><li>LLVM</li><li>Linux kernel modules</li><li>DWARF</li><li>Arm PA</li></ul>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="when">2021 — 2023</div>
+        <div>
+          <h3>Software Engineer · Amazon<span class="sub">Embedded systems · Taipei, Taiwan</span></h3>
+          <ul>
+            <li>Designed a RISC-V crash-capture and fault-handling system that automates device troubleshooting and recovery.</li>
+            <li>Built automated crash-reporting infrastructure with a containerized AWS deployment package for snapshot generation and cloud upload.</li>
+            <li>Drove adoption of the new debugging workflow across <span class="metric">5</span> teams in <span class="metric">3</span> countries.</li>
+          </ul>
+          <ul class="chips"><li>C++</li><li>RISC-V</li><li>RTOS</li><li>AWS</li><li>Docker</li></ul>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="when">2020 — 2021</div>
+        <div>
+          <h3>Software Engineer · Synology<span class="sub">Linux kernel · Taipei, Taiwan</span></h3>
+          <ul>
+            <li>Optimized Linux kernel RAID5 read behavior to raise read throughput.</li>
+            <li>Built a network-performance analysis module with Netfilter and perf that informed packet-dropping strategies under load.</li>
+          </ul>
+          <ul class="chips"><li>C</li><li>Linux kernel</li><li>RAID</li><li>Netfilter</li><li>perf</li></ul>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="when">Grad. Dec 2024</div>
+        <div>
+          <h3>M.S. Computer Science · University of Southern California<span class="sub">Viterbi School of Engineering · GPA 3.9/4.0</span></h3>
+        </div>
+      </div>
+    </section>
+
+    <section id="research">
+      <h2 class="sec-title">Research</h2>
+
+      <div class="item">
+        <div class="when">ACM SAC 2025</div>
+        <div>
+          <h3>Scynteg: System-Call Integrity Protection</h3>
+          <p class="desc">Co-author. An LLVM-based compiler pass plus a loadable Linux kernel module that enforce control-flow integrity of system-call invocations and system-call argument integrity for C/C++ programs on Arm, defending against ROP, SROP, and CHOP attacks.</p>
+          <ul class="chips"><li>LLVM</li><li>Linux kernel</li><li>CFI</li><li>Arm pointer authentication</li></ul>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="when">BMC Bioinformatics 2019</div>
+        <div>
+          <h3><a href="https://doi.org/10.1186/s12859-019-3245-z" target="_blank" rel="noopener">SigUNet: Signal Peptide Recognition Based on Semantic Segmentation <span class="arrow">↗</span></a></h3>
+          <p class="desc">J.-M. Wu, <strong>Y.-C. Liu</strong>, D. T.-H. Chang. Adapts U-Net to one-dimensional protein sequences and outperforms prior signal-peptide predictors on eukaryotic data by MCC. <a href="https://github.com/mbilab/SigUNet" target="_blank" rel="noopener">Code ↗</a></p>
+          <ul class="chips"><li>Deep learning</li><li>PyTorch</li><li>Bioinformatics</li></ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="open-source">
+      <h2 class="sec-title">Open Source</h2>
+
+      <div class="item">
+        <div class="when">Merged</div>
+        <div>
+          <h3><a href="https://github.com/FreeRTOS/FreeRTOS/pull/1145" target="_blank" rel="noopener">FreeRTOS · RISC-V refactoring <span class="arrow">↗</span></a></h3>
+          <p class="desc">Refactored the RISC-V port in the upstream FreeRTOS repository.</p>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="when">Merged</div>
+        <div>
+          <h3><a href="https://github.com/jadore801120/attention-is-all-you-need-pytorch/pull/150" target="_blank" rel="noopener">attention-is-all-you-need-pytorch · LayerNorm fix <span class="arrow">↗</span></a></h3>
+          <p class="desc">Fixed the LayerNorm placement in a widely used PyTorch Transformer reference implementation.</p>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="when">Open PR</div>
+        <div>
+          <h3><a href="https://github.com/nv-tlabs/ChronoEdit/pull/13" target="_blank" rel="noopener">NVIDIA ChronoEdit · CPU inference support <span class="arrow">↗</span></a></h3>
+          <p class="desc">Adds CPU inference with automatic CUDA fallback so the model can run on machines without an NVIDIA GPU.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="projects">
+      <h2 class="sec-title">Projects</h2>
+
+      <div class="item">
+        <div class="when">2024</div>
+        <div>
+          <h3><a href="https://github.com/tony2037/mininet_plb" target="_blank" rel="noopener">Heterogeneity and Google's PLB load balancer <span class="arrow">↗</span></a></h3>
+          <p class="desc">Simulated a Google-style data-center network in Mininet and measured a <span class="metric">17%</span> performance drop when Protective Load Balancing runs on heterogeneous links. Proposed an SDN controller that installs flow entries from traffic, topology, and latency, raising overall throughput by <span class="metric">25%</span>. Also tried eBPF-based EWMA.</p>
+          <ul class="chips"><li>Python</li><li>Mininet</li><li>SDN</li><li>eBPF</li></ul>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="when">2023</div>
+        <div>
+          <h3><a href="https://github.com/tony2037/soteria_unwind" target="_blank" rel="noopener">soteria_unwind <span class="arrow">↗</span></a></h3>
+          <p class="desc">User-space and in-kernel stack unwinding experiments that fed into the Scynteg system-call integrity work.</p>
+          <ul class="chips"><li>C</li><li>Linux kernel module</li></ul>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="when">Linux internals</div>
+        <div>
+          <h3>Kernel and systems experiments</h3>
+          <p class="desc">
+            <a href="https://github.com/tony2037/synonetfilter" target="_blank" rel="noopener">synonetfilter</a> (a Netfilter kernel module),
+            <a href="https://github.com/tony2037/zspci" target="_blank" rel="noopener">zspci</a> (an <code>lspci</code> reimplementation),
+            <a href="https://github.com/tony2037/vma_destroyer" target="_blank" rel="noopener">vma_destroyer</a> (walks a process's VMA list to find an ELF section), and
+            <a href="https://github.com/tony2037/ELF-Interposition-experience" target="_blank" rel="noopener">ELF-Interposition-experience</a> (symbol interposition with <code>--exclude-libs</code>).
+          </p>
+          <ul class="chips"><li>C</li><li>Linux kernel</li><li>ELF</li><li>PCI</li></ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="skills">
+      <h2 class="sec-title">Skills</h2>
+      <dl class="skills">
+        <div><dt>Languages</dt><dd>C++, C, Python</dd></div>
+        <div><dt>Systems</dt><dd>GPU bring-up, PCIe, SR-IOV, IOMMU, register addressing, cache coherency, FPGA emulation, RISC-V, RTOS, Linux kernel, RAID, Netfilter</dd></div>
+        <div><dt>Compilers &amp; tools</dt><dd>LLVM passes and IR, ELF, DWARF, GDB, perf, eBPF, QEMU, Docker, AWS, Git, Perforce</dd></div>
+        <div><dt>AI engineering</dt><dd>MCP services, agent tooling, retrieval and memory systems, PyTorch</dd></div>
+      </dl>
+    </section>
+
+    <footer>
+      <p>Hand-written HTML and CSS, hosted on GitHub Pages. Layout inspired by Brittany Chiang's portfolio.</p>
+    </footer>
+  </main>
+</div>
+<script>
+(function(){
+  var root=document.documentElement, btn=document.getElementById('theme');
+  try{var s=localStorage.getItem('theme'); if(s) root.setAttribute('data-theme',s);}catch(e){}
+  btn.addEventListener('click',function(){
+    var cur=root.getAttribute('data-theme') || (matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+    var next=cur==='dark'?'light':'dark'; root.setAttribute('data-theme',next);
+    try{localStorage.setItem('theme',next);}catch(e){}
+  });
+  var links=[].slice.call(document.querySelectorAll('.sidenav a, .topnav a'));
+  var secs=[].slice.call(document.querySelectorAll('main section'));
+  var topnav=document.querySelector('.topnav'), current=null, ticking=false;
+  function update(){
+    ticking=false;
+    var line=innerHeight*0.3, id=secs[0].id;
+    secs.forEach(function(sec){ if(sec.getBoundingClientRect().top<=line) id=sec.id; });
+    if(innerHeight+scrollY>=document.documentElement.scrollHeight-4) id=secs[secs.length-1].id;
+    if(id===current) return; current=id;
+    links.forEach(function(l){
+      var on=l.getAttribute('href')==='#'+id; l.classList.toggle('active',on);
+      if(on&&l.parentNode===topnav&&getComputedStyle(topnav).display!=='none'){
+        var nr=topnav.getBoundingClientRect(), ar=l.getBoundingClientRect();
+        if(ar.left<nr.left||ar.right>nr.right-24){ topnav.scrollTo({left:topnav.scrollLeft+(ar.left-nr.left)-8,behavior:'smooth'}); }
+      }
+    });
+  }
+  addEventListener('scroll',function(){ if(!ticking){ticking=true;requestAnimationFrame(update);} },{passive:true});
+  addEventListener('resize',function(){current=null;update();});
+  update();
+})();
+</script>
+</body>
+</html>
